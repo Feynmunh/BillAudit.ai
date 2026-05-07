@@ -1,55 +1,44 @@
 # Tests
 
-## How to run
+## How to run locally
 
 ```bash
+npm install
 npm run test
 npm run lint
 npm run build
 ```
 
-`npm run test` runs Vitest tests under `server/`. `npm run build` runs the Next production build and TypeScript checks the Express server with `tsconfig.server.json`.
+- `npm run test` runs the automated Vitest suite under `server/`.
+- `npm run lint` runs ESLint across the Next/React frontend and Express backend TypeScript files.
+- `npm run build` runs `next build` and `tsc -p tsconfig.server.json`, so both the React app and Express server type-check.
 
-## Automated audit-engine tests
+## GitHub Actions CI
 
-The audit engine has 7 automated tests in `server/auditEngine.test.ts`.
+The workflow lives at `.github/workflows/ci.yml`.
 
-1. **Obvious overspend savings**
-   - Input: Cursor Enterprise, $500/month, 1 seat.
-   - Covers: tier recommendation, monthly savings, annual savings, and `moderate` savings level.
-   - Expected: Pro recommendation, $480/month savings, $5,760/year savings.
+It runs on pushes and pull requests to `main`:
 
-2. **Published pricing alignment**
-   - Input: ChatGPT Team, $90/month, 3 seats.
-   - Covers: 10% tolerance rule when spend matches published per-seat pricing.
-   - Expected: no savings, Team recommendation, `optimal` savings level.
+1. `npm ci`
+2. `npm run test`
+3. `npm run lint`
+4. `npm run build`
 
-3. **Annual billing normalization**
-   - Input: annual spend of $240 and monthly spend of $20.
-   - Covers: `calculateMonthlyCost` and `calculateAnnualCost` helpers.
-   - Expected: $20/month and $240/year.
+## Automated tests
 
-4. **Usage-based API spend guardrail**
-   - Input: OpenAI API Pay-as-you-go, $700/month.
-   - Covers: no false-positive savings for usage-based billing.
-   - Expected: $0 savings and Pay-as-you-go recommendation.
+All automated tests are in `server/auditEngine.test.ts`. The file contains 7 audit-engine tests, exceeding the minimum requirement of 5 audit-engine-specific tests.
 
-5. **High savings threshold**
-   - Input: Cursor Enterprise, $900/month, 1 seat.
-   - Covers: savings tier threshold above $500/month.
-   - Expected: $880/month savings and `high` savings level.
+| Filename | Test name | What it covers | How to run |
+|---|---|---|---|
+| `server/auditEngine.test.ts` | `calculates savings for obvious overspend` | Cursor Enterprise at $500/month for 1 seat recommends Pro, calculates $480/month savings, $5,760/year savings, and `moderate` savings level. | `npm run test` |
+| `server/auditEngine.test.ts` | `marks stack optimal when published pricing matches spend` | ChatGPT Team at $90/month for 3 seats matches published per-seat pricing and produces $0 savings with `optimal` savings level. | `npm run test` |
+| `server/auditEngine.test.ts` | `normalizes annual billing to monthly cost` | `calculateMonthlyCost(0, "annual", 240)` returns $20/month and `calculateAnnualCost(20, "monthly")` returns $240/year. | `npm run test` |
+| `server/auditEngine.test.ts` | `does not create false positive savings for usage-based API spend` | OpenAI API Pay-as-you-go at $700/month produces $0 savings and keeps the Pay-as-you-go recommendation. | `npm run test` |
+| `server/auditEngine.test.ts` | `uses high savings tier above five hundred monthly` | Cursor Enterprise at $900/month for 1 seat produces $880/month savings and `high` savings level. | `npm run test` |
+| `server/auditEngine.test.ts` | `fails fast for unknown tool ids` | Unsupported `tool_id` values throw `Unknown tool_id` instead of producing misleading recommendations. | `npm run test` |
+| `server/auditEngine.test.ts` | `rejects duplicate tool ids` | Zod request validation rejects duplicate tool entries in the same audit request. | `npm run test` |
 
-6. **Unknown tool failure**
-   - Input: `unknown_vendor`.
-   - Covers: fail-fast behavior for unsupported tool IDs.
-   - Expected: throws `Unknown tool_id`.
-
-7. **Duplicate tool rejection**
-   - Input: two Cursor records in the same audit request.
-   - Covers: Zod uniqueness validation that replaced Pydantic validation.
-   - Expected: validation fails.
-
-## Manual QA performed
+## Manual QA already performed
 
 Manual same-port QA was run against `http://127.0.0.1:3000`:
 
