@@ -52,4 +52,4 @@ If Supabase keys are missing, the app uses in-memory storage. If Anthropic keys 
 - `app/` - Next App Router pages and React UI.
 - `server/` - Express API, Zod models, audit engine, pricing data, storage, and Anthropic summary service.
 - `public/` - Static assets.
-- `ARCHITECTURE.md`, `DEVLOG.md`, `TESTS.md`, `PRICING_DATA.md`, `PROMPTS.md`, `REFLECTION.md` - required engineering documentation.
+- `docs/ARCHITECTURE.md`, `docs/DEVLOG.md`, `docs/TESTS.md`, `docs/PRICING_DATA.md`, `docs/PROMPTS.md`, `docs/REFLECTION.md` - required engineering documentation.
