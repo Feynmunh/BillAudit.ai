@@ -1,0 +1,260 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f8f7f2;
+  --foreground: #111111;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Helvetica, Arial, sans-serif;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+.button-primary,
+.button-secondary,
+.button-light {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 4rem;
+  padding: 0 1.6rem;
+  border: 1px solid #111111;
+  border-radius: 0;
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.button-primary {
+  background: #111111;
+  color: #ffffff;
+  box-shadow: 8px 8px 0 #17e86f;
+}
+
+.button-secondary {
+  background: #ffffff;
+  color: #111111;
+  box-shadow: 8px 8px 0 #f0f0f0;
+}
+
+.button-light {
+  background: #17e86f;
+  color: #111111;
+  box-shadow: 8px 8px 0 #ffffff;
+}
+
+.button-primary:hover,
+.button-secondary:hover,
+.button-light:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 12px 12px 0 #111111;
+}
+
+.button-primary:disabled,
+.button-light:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+  transform: none;
+}
+
+.field-label {
+  display: grid;
+  gap: 0.5rem;
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgb(0 0 0 / 0.48);
+}
+
+.field-input {
+  min-height: 3rem;
+  width: 100%;
+  border: 1px solid rgb(0 0 0 / 0.1);
+  border-radius: 0;
+  background: #fbfaf7;
+  padding: 0 0.9rem;
+  color: #111111;
+  outline: none;
+}
+
+.field-input:focus {
+  border-color: #111111;
+  box-shadow: 0 0 0 4px rgb(23 232 111 / 0.14);
+}
+
+.metric-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid rgb(0 0 0 / 0.08);
+  border-radius: 0;
+  background: #ffffff;
+  padding: 0.9rem 1rem;
+}
+
+.metric-row strong {
+  color: #111111;
+}
+
+.result-card {
+  border: 1px solid rgb(0 0 0 / 0.08);
+  border-radius: 0;
+  background: #f8f7f2;
+  padding: 1.5rem;
+  box-shadow: 0 12px 40px rgb(0 0 0 / 0.04);
+}
+
+.tool-row {
+  display: grid;
+  gap: 1rem;
+  align-items: center;
+  border: 1px solid rgb(0 0 0 / 0.08);
+  border-radius: 0;
+  background: #ffffff;
+  padding: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .tool-row {
+    grid-template-columns: 0.46fr 1fr;
+  }
+}
+
+.audit-visual {
+  position: absolute;
+  inset: 2rem;
+  overflow: hidden;
+  border: 1px dashed rgb(0 0 0 / 0.18);
+  background: #ffffff;
+  box-shadow: none;
+}
+
+.diagram-frame {
+  position: absolute;
+  inset: 7%;
+  border: 1px dashed rgb(0 0 0 / 0.08);
+}
+
+.hero-panel {
+  position: absolute;
+  z-index: 4;
+  display: grid;
+  gap: 0.7rem;
+  border: 1.5px solid #111111;
+  background: #f8f7f2;
+  padding: 1.1rem;
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+  box-shadow: 10px 10px 0 #17e86f;
+}
+
+.hero-panel span {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: rgb(0 0 0 / 0.48);
+}
+
+.hero-panel strong {
+  font-size: clamp(1.6rem, 3vw, 3rem);
+  line-height: 0.92;
+  letter-spacing: -0.08em;
+  text-transform: uppercase;
+  color: #111111;
+}
+
+.panel-stack {
+  left: 11%;
+  top: 17%;
+  width: min(250px, 42%);
+}
+
+.panel-audit {
+  left: 36%;
+  top: 41%;
+  width: min(310px, 48%);
+  background: #17e86f;
+  box-shadow: 10px 10px 0 #111111;
+}
+
+.panel-action {
+  right: 10%;
+  bottom: 13%;
+  width: min(245px, 42%);
+}
+
+.hero-wire {
+  position: absolute;
+  z-index: 2;
+  height: 1px;
+  border-top: 2px dashed #111111;
+  transform-origin: left center;
+}
+
+.wire-stack {
+  left: 31%;
+  top: 39%;
+  width: 170px;
+  transform: rotate(28deg);
+}
+
+.wire-action {
+  left: 58%;
+  top: 63%;
+  width: 150px;
+  transform: rotate(25deg);
+}
+
+.hero-block {
+  position: absolute;
+  z-index: 1;
+  border: 1.5px solid #17e86f;
+  background: rgb(23 232 111 / 0.14);
+}
+
+.block-a {
+  right: 12%;
+  top: 14%;
+  width: 96px;
+  height: 96px;
+}
+
+.block-b {
+  left: 14%;
+  bottom: 15%;
+  width: 74px;
+  height: 74px;
+  background: #111111;
+}
+
+@media (max-width: 768px) {
+  .audit-visual {
+    inset: 1rem;
+  }
+}

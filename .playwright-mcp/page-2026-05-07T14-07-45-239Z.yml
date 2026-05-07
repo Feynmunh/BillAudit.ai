@@ -1,0 +1,214 @@
+- main [ref=e2]:
+  - generic [ref=e3]: Instant AI spend audit · no login required · built for Credex operators
+  - navigation [ref=e4]:
+    - link "BillAudit home" [ref=e5] [cursor=pointer]:
+      - /url: "#top"
+      - generic [ref=e6]: B
+      - generic [ref=e7]: billaudit
+    - generic [ref=e8]:
+      - link "Audit" [ref=e9] [cursor=pointer]:
+        - /url: "#audit"
+      - link "Results" [ref=e10] [cursor=pointer]:
+        - /url: "#results"
+      - link "Share" [ref=e11] [cursor=pointer]:
+        - /url: "#lead"
+    - link "Run audit" [ref=e12] [cursor=pointer]:
+      - /url: "#audit"
+  - generic [ref=e13]:
+    - generic [ref=e14]:
+      - paragraph [ref=e15]: AI finance control plane
+      - heading "Audit your AI burn before renewal." [level=1] [ref=e16]
+      - paragraph [ref=e17]: Surface wasted spend across Cursor, Claude, ChatGPT, Gemini and API usage in under a minute.
+      - generic [ref=e18]:
+        - link "Get instant audit →" [ref=e19] [cursor=pointer]:
+          - /url: "#audit"
+        - link "See savings model →" [ref=e20] [cursor=pointer]:
+          - /url: "#results"
+    - generic [ref=e22]:
+      - generic [ref=e24]:
+        - generic [ref=e25]: Monthly stack
+        - strong [ref=e26]: $18.4k
+        - generic [ref=e27]: 6 active AI vendors
+      - generic [ref=e28]:
+        - generic [ref=e29]: Potential savings
+        - strong [ref=e30]: $2.8k
+        - generic [ref=e31]: 15.2% monthly reduction
+      - generic [ref=e32]: Input
+      - generic [ref=e33]: Audit
+      - generic [ref=e34]: Lead
+  - generic [ref=e37]:
+    - generic [ref=e38]:
+      - paragraph [ref=e39]: Operator promise
+      - paragraph [ref=e40]: No login gate before value
+    - generic [ref=e41]:
+      - paragraph [ref=e42]: Operator promise
+      - paragraph [ref=e43]: Finance-literate recommendations
+    - generic [ref=e44]:
+      - paragraph [ref=e45]: Operator promise
+      - paragraph [ref=e46]: Public audit link for sharing
+  - generic [ref=e48]:
+    - generic [ref=e49]:
+      - paragraph [ref=e50]: Spend input
+      - heading "A cleaner way to map AI spend." [level=2] [ref=e51]
+      - paragraph [ref=e52]: Choose the tools you pay for, enter the current plan and monthly spend, then run the audit.
+      - generic [ref=e53]:
+        - generic [ref=e54]:
+          - generic [ref=e55]: Selected
+          - strong [ref=e56]: "2"
+        - generic [ref=e57]:
+          - generic [ref=e58]: Monthly spend
+          - strong [ref=e59]: $110
+        - generic [ref=e60]:
+          - generic [ref=e61]: Autosave
+          - strong [ref=e62]: "On"
+    - generic [ref=e63]:
+      - generic [ref=e64]:
+        - group [ref=e65]:
+          - generic [ref=e66]:
+            - checkbox "Cursor Coding" [checked] [ref=e67]
+            - generic [ref=e68]:
+              - generic [ref=e69]: Cursor
+              - generic [ref=e70]: Coding
+          - generic [ref=e71]:
+            - generic [ref=e72]:
+              - text: Plan
+              - textbox "Plan" [ref=e73]: Pro
+            - generic [ref=e74]:
+              - text: Monthly $
+              - textbox "Monthly $" [ref=e75]: "80"
+            - generic [ref=e76]:
+              - text: Seats
+              - textbox "Seats" [ref=e77]: "1"
+            - generic [ref=e78]:
+              - text: Billing
+              - combobox "Billing" [ref=e79]:
+                - option "Monthly" [selected]
+                - option "Annual"
+        - group [ref=e80]:
+          - generic [ref=e81]:
+            - checkbox "Copilot Coding" [ref=e82]
+            - generic [ref=e83]:
+              - generic [ref=e84]: Copilot
+              - generic [ref=e85]: Coding
+          - generic [ref=e86]:
+            - generic [ref=e87]:
+              - text: Plan
+              - textbox "Plan" [ref=e88]: Business
+            - generic [ref=e89]:
+              - text: Monthly $
+              - textbox "Monthly $" [ref=e90]: "0"
+            - generic [ref=e91]:
+              - text: Seats
+              - textbox "Seats" [ref=e92]: "1"
+            - generic [ref=e93]:
+              - text: Billing
+              - combobox "Billing" [ref=e94]:
+                - option "Monthly" [selected]
+                - option "Annual"
+        - group [ref=e95]:
+          - generic [ref=e96]:
+            - checkbox "Claude Chat" [ref=e97]
+            - generic [ref=e98]:
+              - generic [ref=e99]: Claude
+              - generic [ref=e100]: Chat
+          - generic [ref=e101]:
+            - generic [ref=e102]:
+              - text: Plan
+              - textbox "Plan" [ref=e103]: Pro
+            - generic [ref=e104]:
+              - text: Monthly $
+              - textbox "Monthly $" [ref=e105]: "0"
+            - generic [ref=e106]:
+              - text: Seats
+              - textbox "Seats" [ref=e107]: "1"
+            - generic [ref=e108]:
+              - text: Billing
+              - combobox "Billing" [ref=e109]:
+                - option "Monthly" [selected]
+                - option "Annual"
+        - group [ref=e110]:
+          - generic [ref=e111]:
+            - checkbox "ChatGPT Chat" [checked] [ref=e112]
+            - generic [ref=e113]:
+              - generic [ref=e114]: ChatGPT
+              - generic [ref=e115]: Chat
+          - generic [ref=e116]:
+            - generic [ref=e117]:
+              - text: Plan
+              - textbox "Plan" [ref=e118]: Team
+            - generic [ref=e119]:
+              - text: Monthly $
+              - textbox "Monthly $" [ref=e120]: "30"
+            - generic [ref=e121]:
+              - text: Seats
+              - textbox "Seats" [ref=e122]: "1"
+            - generic [ref=e123]:
+              - text: Billing
+              - combobox "Billing" [ref=e124]:
+                - option "Monthly" [selected]
+                - option "Annual"
+        - group [ref=e125]:
+          - generic [ref=e126]:
+            - checkbox "Gemini Chat" [ref=e127]
+            - generic [ref=e128]:
+              - generic [ref=e129]: Gemini
+              - generic [ref=e130]: Chat
+          - generic [ref=e131]:
+            - generic [ref=e132]:
+              - text: Plan
+              - textbox "Plan" [ref=e133]: Advanced
+            - generic [ref=e134]:
+              - text: Monthly $
+              - textbox "Monthly $" [ref=e135]: "0"
+            - generic [ref=e136]:
+              - text: Seats
+              - textbox "Seats" [ref=e137]: "1"
+            - generic [ref=e138]:
+              - text: Billing
+              - combobox "Billing" [ref=e139]:
+                - option "Monthly" [selected]
+                - option "Annual"
+        - group [ref=e140]:
+          - generic [ref=e141]:
+            - checkbox "API Spend API" [ref=e142]
+            - generic [ref=e143]:
+              - generic [ref=e144]: API Spend
+              - generic [ref=e145]: API
+          - generic [ref=e146]:
+            - generic [ref=e147]:
+              - text: Plan
+              - textbox "Plan" [ref=e148]: Pay-as-you-go
+            - generic [ref=e149]:
+              - text: Monthly $
+              - textbox "Monthly $" [ref=e150]: "0"
+            - generic [ref=e151]:
+              - text: Seats
+              - textbox "Seats" [ref=e152]: "1"
+            - generic [ref=e153]:
+              - text: Billing
+              - combobox "Billing" [ref=e154]:
+                - option "Monthly" [selected]
+                - option "Annual"
+      - generic [ref=e155]:
+        - paragraph [ref=e156]: Draft autosaves across reloads.
+        - button "Run spend audit →" [ref=e157]
+  - generic [ref=e158]:
+    - generic [ref=e160]:
+      - paragraph [ref=e161]: Audit dashboard
+      - heading "Savings signal." [level=2] [ref=e162]
+    - generic [ref=e164]:
+      - paragraph [ref=e165]: Waiting for input
+      - paragraph [ref=e166]: Run the audit to reveal savings.
+  - generic [ref=e167]:
+    - generic [ref=e168]:
+      - paragraph [ref=e169]: Lead capture
+      - heading "Turn the audit into a public signal." [level=2] [ref=e170]
+      - paragraph [ref=e171]: Capture the benchmark export and reserve a PII-safe share link after the savings value is visible.
+    - generic [ref=e172]:
+      - generic [ref=e173]:
+        - text: Work email
+        - textbox "Work email" [ref=e174]
+      - generic [ref=e175]:
+        - text: Company
+        - textbox "Company" [ref=e176]
+      - button "Send benchmark + share URL →" [disabled] [ref=e177]
