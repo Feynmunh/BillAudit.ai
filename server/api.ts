@@ -15,6 +15,22 @@ export function createApiRouter(): express.Router {
   router.get("/api/health", (_request, response) => response.json({ message: "BillAudit API", version: "1.0.0" }));
   router.get("/api/tools", (_request, response) => response.json({ tools: getPricingDatabase().map((tool) => ({ tool_id: tool.tool_id, name: tool.name, category: tool.category, tiers: tool.tiers.map((tier) => ({ name: tier.name, price_monthly: tier.price_monthly })) })) }));
 
+  router.post("/api/audit/calculate", async (request, response, next) => {
+    try {
+      const parsed = auditRequestSchema.safeParse(request.body);
+      if (!parsed.success) {
+        response.status(400).json({ success: false, error: parsed.error.issues.map((issue) => issue.message).join("; ") });
+        return;
+      }
+      const result = auditEngine.runAudit(parsed.data);
+      result.ai_summary = await generatePersonalizedSummary(result);
+      await auditStore.saveAudit(result);
+      response.json({ success: true, data: result });
+    } catch (error) {
+      next(error);
+    }
+  });
+
   router.post("/api/audit", async (request, response, next) => {
     try {
       const parsed = auditRequestSchema.safeParse(request.body);

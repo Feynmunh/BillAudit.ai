@@ -30,13 +30,14 @@ export const userToolSpendSchema = z.object({
   billing_cycle: billingCycleSchema.default("monthly"),
   annual_spend: z.coerce.number().nonnegative().nullable().optional(),
   team_size: z.coerce.number().int().min(1).default(1),
-  usage_description: z.string().nullable().optional(),
+  usage_description: z.string().max(500).nullable().optional(),
 });
 
 export const auditRequestSchema = z.object({
   tools: z.array(userToolSpendSchema).min(1).max(20),
   team_size: z.coerce.number().int().min(1).max(10_000).default(1),
   industry: z.string().nullable().optional(),
+  use_case: z.string().max(500).nullable().optional(),
   include_alternatives: z.boolean().default(true),
 }).superRefine((request, context) => {
   const seen = new Set<string>();
@@ -52,6 +53,7 @@ export const leadSchema = z.object({
   email: z.string().email(),
   company: z.string().max(200).nullable().optional(),
   role: z.string().max(100).nullable().optional(),
+  team_size: z.coerce.number().int().min(1).max(10_000).nullable().optional(),
   audit_id: z.string().min(1),
   created_at: z.string().datetime().optional(),
 });
@@ -76,6 +78,7 @@ export type ToolRecommendation = {
   savings_percentage: number;
   reasoning: string;
   alternative_tools: string[] | null;
+  flags: string[];
 };
 
 export type AuditResult = {
@@ -99,4 +102,10 @@ export type PublicAuditView = {
   savings_percentage: number;
   created_at: string;
   tool_count: number;
+};
+
+export type AuditResponse = {
+  success: boolean;
+  data?: AuditResult;
+  error?: string;
 };

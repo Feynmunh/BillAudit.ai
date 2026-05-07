@@ -4,6 +4,8 @@
 
 ```bash
 npm install
+export SUPABASE_URL="<project-url>"
+export SUPABASE_SERVICE_ROLE_KEY="<service-role-key>"
 npm run test
 npm run lint
 npm run build
@@ -26,7 +28,7 @@ It runs on pushes and pull requests to `main`:
 
 ## Automated tests
 
-All automated tests are in `server/auditEngine.test.ts`. The file contains 7 audit-engine tests, exceeding the minimum requirement of 5 audit-engine-specific tests.
+All automated tests are in `server/auditEngine.test.ts`. The file contains 10 audit-engine tests, exceeding the minimum requirement of 5 audit-engine-specific tests.
 
 | Filename | Test name | What it covers | How to run |
 |---|---|---|---|
@@ -37,6 +39,9 @@ All automated tests are in `server/auditEngine.test.ts`. The file contains 7 aud
 | `server/auditEngine.test.ts` | `uses high savings tier above five hundred monthly` | Cursor Enterprise at $900/month for 1 seat produces $880/month savings and `high` savings level. | `npm run test` |
 | `server/auditEngine.test.ts` | `fails fast for unknown tool ids` | Unsupported `tool_id` values throw `Unknown tool_id` instead of producing misleading recommendations. | `npm run test` |
 | `server/auditEngine.test.ts` | `rejects duplicate tool ids` | Zod request validation rejects duplicate tool entries in the same audit request. | `npm run test` |
+| `server/auditEngine.test.ts` | `creates UUID audit ids` | Audit IDs are random UUIDs suitable for `/audit/:uuid` public pages. | `npm run test` |
+| `server/auditEngine.test.ts` | `accepts a bounded use case description` | Zod accepts the optional MVP use-case field. | `npm run test` |
+| `server/auditEngine.test.ts` | `flags small teams on team or enterprise plans` | Finance flags surface small-team plan mismatch warnings. | `npm run test` |
 
 ## Manual QA already performed
 
@@ -44,13 +49,13 @@ Manual same-port QA was run against `http://127.0.0.1:3000`:
 
 - `GET /` rendered the React homepage.
 - `GET /api/health` returned API health JSON.
-- `POST /api/audit` returned a successful audit with $480/month savings for the Cursor overspend sample.
+- `POST /api/audit/calculate` returned a successful audit with $480/month savings for the Cursor overspend sample.
 - `GET /api/share/:auditId` returned the PII-safe public JSON.
-- `GET /share/:auditId` rendered the Next public share page.
+- `GET /audit/:uuid` rendered the Next public audit page.
 
 ## Remaining test gaps
 
 - Add Playwright tests for the full browser audit and lead-capture flow.
-- Add Supabase integration tests with a disposable test project or mocked client.
-- Add summary-service tests for Anthropic success, missing key, and failure fallback.
+- Add Supabase integration tests with a disposable test project.
+- Add summary-service tests for Gemini success, missing key, and failure fallback.
 - Add rate-limit/security tests once rate limiting is implemented.

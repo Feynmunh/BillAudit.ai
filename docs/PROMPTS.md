@@ -2,7 +2,7 @@
 
 ## Personalized summary prompt
 
-The production prompt is built in `server/summaryService.ts` and sent to Anthropic only when `ANTHROPIC_API_KEY` is configured.
+The production prompt is built in `server/summaryService.ts` and sent to Gemini only when `GEMINI_API_KEY` or `GOOGLE_API_KEY` is configured.
 
 ```text
 Write a concise 90-110 word executive summary for an AI spend audit. Be finance-literate, specific, and avoid hype. Do not mention private data. Monthly spend: $<total_monthly_spend>. Monthly savings: $<total_monthly_savings>. Annual savings: $<total_annual_savings>. Savings level: <savings_level>. Recommendations: <tool_id>: save $<monthly_savings>/mo by using <recommended_plan>; ...
@@ -10,10 +10,9 @@ Write a concise 90-110 word executive summary for an AI spend audit. Be finance-
 
 Runtime settings:
 
-- SDK: `@anthropic-ai/sdk`
-- Method: `client.messages.create(...)`
-- Model: `ANTHROPIC_MODEL` or `claude-3-5-haiku-latest`
-- `max_tokens`: 180
+- SDK: `@google/genai`
+- Method: `client.models.generateContent(...)`
+- Model: `GEMINI_MODEL` or `gemini-2.5-flash`
 - Input recommendations: top 3 by monthly savings
 
 ## Why it is structured this way
@@ -26,7 +25,7 @@ Runtime settings:
 
 ## Fallback behavior
 
-If `ANTHROPIC_API_KEY` is missing, the app returns the deterministic fallback summary from `server/auditEngine.ts`. If Anthropic fails, the app returns the fallback plus this suffix:
+If `GEMINI_API_KEY` and `GOOGLE_API_KEY` are missing, the app returns the deterministic fallback summary from `server/auditEngine.ts`. If Gemini fails, the app returns the fallback plus this suffix:
 
 ```text
 AI summary fallback used because the LLM request failed: <ErrorName>.

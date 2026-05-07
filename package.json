@@ -10,7 +10,7 @@
     "test": "vitest run --dir server"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.71.0",
+    "@google/genai": "^1.52.0",
     "@hookform/resolvers": "^5.2.2",
     "@supabase/supabase-js": "^2.87.1",
     "decimal.js": "^10.6.0",

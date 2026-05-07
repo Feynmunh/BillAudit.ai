@@ -1,9 +1,14 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import type { z } from "zod";
+
+import { auditRequestSchema, leadSchema, type AuditRequest, type AuditResponse, type AuditResult, type Lead } from "../server/models";
 
 type BillingCycle = "monthly" | "annual";
-type SavingsLevel = "high" | "moderate" | "optimal";
+type SavingsLevel = AuditResult["savings_level"];
 
 type ToolConfig = {
   id: string;
@@ -23,44 +28,13 @@ type ToolSpend = {
   teamSize: string;
 };
 
-type ToolRecommendation = {
-  tool_id: string;
-  current_plan: string;
-  current_monthly_spend: number;
-  recommended_plan: string;
-  recommended_monthly_spend: number;
-  monthly_savings: number;
-  annual_savings: number;
-  savings_percentage: number;
-  reasoning: string;
-  alternative_tools: string[] | null;
-};
-
-type AuditResult = {
-  audit_id: string;
-  created_at: string;
-  total_monthly_spend: number;
-  total_annual_spend: number;
-  total_monthly_savings: number;
-  total_annual_savings: number;
-  savings_level: SavingsLevel;
-  tool_recommendations: ToolRecommendation[];
-  summary: string | null;
-  ai_summary: string | null;
-};
-
-type AuditResponse = {
-  success: boolean;
-  data?: AuditResult;
-  error?: string;
-};
-
 const tools: ToolConfig[] = [
   { id: "cursor", name: "Cursor", category: "Coding", accent: "#19e272", defaultPlan: "Pro" },
   { id: "github_copilot", name: "Copilot", category: "Coding", accent: "#7c3cff", defaultPlan: "Business" },
   { id: "claude", name: "Claude", category: "Chat", accent: "#ff6b2b", defaultPlan: "Pro" },
   { id: "chatgpt", name: "ChatGPT", category: "Chat", accent: "#0ea5e9", defaultPlan: "Team" },
   { id: "gemini", name: "Gemini", category: "Chat", accent: "#f6d743", defaultPlan: "Advanced" },
+  { id: "windsurf", name: "Windsurf", category: "Coding", accent: "#10b981", defaultPlan: "Pro" },
   { id: "openai_api", name: "API Spend", category: "API", accent: "#ff8bd2", defaultPlan: "Pay-as-you-go" },
 ];
 
@@ -116,9 +90,14 @@ export default function Home() {
   const [result, setResult] = useState<AuditResult | null>(null);
   const [email, setEmail] = useState("");
   const [company, setCompany] = useState("");
+  const [role, setRole] = useState("");
+  const [leadTeamSize, setLeadTeamSize] = useState("1");
+  const [useCase, setUseCase] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "error" | "sent">("idle");
   const [message, setMessage] = useState("");
   const formLoaded = useRef(false);
+  const auditForm = useForm<z.input<typeof auditRequestSchema>, unknown, AuditRequest>({ resolver: zodResolver(auditRequestSchema), defaultValues: { tools: [], team_size: 1, industry: null, use_case: null, include_alternatives: true } });
+  const leadForm = useForm<z.input<typeof leadSchema>, unknown, Lead>({ resolver: zodResolver(leadSchema) });
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -159,7 +138,7 @@ export default function Home() {
     setStatus("loading");
     setMessage("");
 
-    const payload = {
+    const payload: AuditRequest = {
       tools: form
         .filter((tool) => tool.enabled)
         .map((tool) => ({
@@ -171,6 +150,7 @@ export default function Home() {
           team_size: Math.max(1, Math.round(numeric(tool.teamSize))),
         })),
       team_size: 1,
+      use_case: useCase || null,
       include_alternatives: true,
     };
 
@@ -180,11 +160,20 @@ export default function Home() {
       return;
     }
 
+    const parsed = auditRequestSchema.safeParse(payload);
+    if (!parsed.success) {
+      setStatus("error");
+      setMessage(parsed.error.issues.map((issue) => issue.message).join("; "));
+      return;
+    }
+
+    auditForm.reset(parsed.data);
+
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/audit`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/audit/calculate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(parsed.data),
       });
       const json = (await response.json()) as AuditResponse;
       if (!response.ok || !json.success || !json.data) {
@@ -205,17 +194,31 @@ export default function Home() {
       return;
     }
     setStatus("loading");
+    const leadPayload: Lead = {
+      email,
+      company: company || null,
+      role: role || null,
+      team_size: leadTeamSize ? Math.max(1, Math.round(numeric(leadTeamSize))) : null,
+      audit_id: result.audit_id,
+    };
+    const parsedLead = leadSchema.safeParse(leadPayload);
+    if (!parsedLead.success) {
+      setStatus("error");
+      setMessage(parsedLead.error.issues.map((issue) => issue.message).join("; "));
+      return;
+    }
+    leadForm.reset(parsedLead.data);
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/lead`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, company: company || null, audit_id: result.audit_id }),
+        body: JSON.stringify(parsedLead.data),
       });
       if (!response.ok) {
         throw new Error("Lead capture failed.");
       }
       setStatus("sent");
-      setMessage(`Public audit URL reserved: /share/${result.audit_id}`);
+      setMessage(`Public audit URL reserved: /audit/${result.audit_id}`);
     } catch (error) {
       setStatus("error");
       setMessage(error instanceof Error ? error.message : "Lead capture failed.");
@@ -297,7 +300,7 @@ export default function Home() {
               A cleaner way to map AI spend.
             </h2>
             <p className="mt-5 max-w-md text-lg leading-relaxed text-black/60">
-              Choose the tools you pay for, enter the current plan and monthly spend, then run the audit.
+              Choose the tools you pay for, enter the current plan, use case, and monthly spend, then run the audit.
             </p>
             <div className="mt-8 grid gap-3 font-mono text-xs uppercase tracking-[0.12em]">
               <div className="metric-row"><span>Selected</span><strong>{selectedCount}</strong></div>
@@ -308,6 +311,10 @@ export default function Home() {
 
           <form onSubmit={runAudit} className="border border-black/10 bg-white p-4 shadow-[0_30px_80px_rgb(0_0_0/0.08)] lg:p-5">
             <div className="grid gap-3">
+              <label className="field-label bg-[#f8f7f2] p-4">
+                Primary use case
+                <textarea value={useCase} onChange={(event) => setUseCase(event.target.value)} maxLength={500} className="field-input min-h-24" placeholder="Example: engineering copilots, support research, finance workflows, or product prototyping" />
+              </label>
               {form.map((toolSpend) => {
                 const config = tools.find((tool) => tool.id === toolSpend.toolId);
                 if (!config) {
@@ -406,6 +413,11 @@ export default function Home() {
                     <h3 className="mt-2 text-3xl font-semibold capitalize tracking-tight">{rec.tool_id.replace("_", " ")}</h3>
                   </div>
                   <p className="text-xl leading-snug text-black/70">{rec.reasoning}</p>
+                  {rec.flags.length > 0 && (
+                    <ul className="md:col-span-2 grid gap-2 font-mono text-xs uppercase tracking-[0.12em] text-black/55">
+                      {rec.flags.map((flag) => <li key={flag}>Flag: {flag}</li>)}
+                    </ul>
+                  )}
                   <div className="text-left md:text-right">
                     <p className="font-mono text-xs uppercase tracking-[0.25em] text-black/45">Save/mo</p>
                     <p className="text-3xl font-semibold text-[#13b95a]">{currency(rec.monthly_savings)}</p>
@@ -431,6 +443,14 @@ export default function Home() {
           <label className="field-label text-white/60">
             Company
             <input value={company} onChange={(event) => setCompany(event.target.value)} className="field-input bg-white text-black" />
+          </label>
+          <label className="field-label text-white/60">
+            Role
+            <input value={role} onChange={(event) => setRole(event.target.value)} className="field-input bg-white text-black" />
+          </label>
+          <label className="field-label text-white/60">
+            Team size
+            <input inputMode="numeric" value={leadTeamSize} onChange={(event) => setLeadTeamSize(event.target.value)} className="field-input bg-white text-black" />
           </label>
           <button type="submit" className="button-light" disabled={!result || status === "loading"}>Send benchmark + share URL →</button>
         </form>

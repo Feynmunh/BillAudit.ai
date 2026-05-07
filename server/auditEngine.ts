@@ -55,6 +55,15 @@ export function findAlternativeTools(toolId: string): string[] {
   return PRICING_DATABASE.filter((candidate) => candidate.tool_id !== toolId && candidate.category === tool.category).slice(0, 3).map((candidate) => candidate.name);
 }
 
+function findFinanceFlags(toolId: string, currentPlan: string, teamSize: number): string[] {
+  const flags: string[] = [];
+  const normalizedPlan = currentPlan.toLowerCase();
+  if (teamSize < 3 && (normalizedPlan.includes("enterprise") || normalizedPlan.includes("team") || normalizedPlan.includes("business") || normalizedPlan.includes("teams"))) {
+    flags.push("Seat check: team size under 3 on a team or enterprise tier; review downgrade options before renewal.");
+  }
+  return flags;
+}
+
 export function generateFallbackSummary(recommendations: ToolRecommendation[]): string {
   const totalSavings = recommendations.reduce((sum, rec) => sum.plus(rec.monthly_savings), new Decimal(0));
   if (totalSavings.lessThanOrEqualTo(0)) return "Your AI stack is already close to optimal. Keep contracts aligned with active seats and review API usage monthly.";
@@ -87,13 +96,14 @@ export class AuditEngine {
         savings_percentage: Math.min(savingsPct, 99.9),
         reasoning: monthlySavings > 0 ? `Current spend is $${currentMonthly.toFixed(0)}/mo for ${teamSize} seat(s). A ${optimal.tier_name} plan is a defensible baseline at $${recommendedMonthly.toFixed(0)}/mo before usage-specific add-ons.` : `Current ${userTool.current_plan} spend is aligned with published pricing for ${teamSize} seat(s) or usage-based billing.`,
         alternative_tools: request.include_alternatives ? findAlternativeTools(userTool.tool_id) : null,
+        flags: findFinanceFlags(userTool.tool_id, userTool.current_plan, teamSize),
       });
     }
     const totalMonthly = roundMoney(recommendations.reduce((sum, rec) => sum.plus(rec.current_monthly_spend), new Decimal(0)));
     const totalMonthlySavings = roundMoney(recommendations.reduce((sum, rec) => sum.plus(rec.monthly_savings), new Decimal(0)));
     const totalAnnual = roundMoney(new Decimal(totalMonthly).times(12));
     const totalAnnualSavings = roundMoney(new Decimal(totalMonthlySavings).times(12));
-    return { audit_id: `AUD-${crypto.randomUUID().replaceAll("-", "").slice(0, 12).toUpperCase()}`, created_at: new Date().toISOString(), total_monthly_spend: totalMonthly, total_annual_spend: totalAnnual, total_monthly_savings: totalMonthlySavings, total_annual_savings: totalAnnualSavings, savings_level: totalMonthlySavings > 500 ? "high" : totalMonthlySavings >= 50 ? "moderate" : "optimal", tool_recommendations: recommendations, summary: generateFallbackSummary(recommendations), ai_summary: null };
+    return { audit_id: crypto.randomUUID(), created_at: new Date().toISOString(), total_monthly_spend: totalMonthly, total_annual_spend: totalAnnual, total_monthly_savings: totalMonthlySavings, total_annual_savings: totalAnnualSavings, savings_level: totalMonthlySavings > 500 ? "high" : totalMonthlySavings >= 100 ? "moderate" : "optimal", tool_recommendations: recommendations, summary: generateFallbackSummary(recommendations), ai_summary: null };
   }
 
   getPublicView(result: AuditResult): PublicAuditView {

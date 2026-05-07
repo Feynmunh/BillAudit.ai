@@ -16,7 +16,7 @@
 
 **Hours worked:** 6
 
-**What I did:** Built the first backend API, storage flow, public audit view, and lead capture path. Added Supabase persistence with an in-memory local fallback.
+**What I did:** Built the first backend API, storage flow, public audit view, and lead capture path. Added Supabase persistence for audit and lead records.
 
 **What I learned:** A share page needs a separate public view model so email, company, and role data never leak into public output.
 
@@ -52,7 +52,7 @@
 
 **Hours worked:** 3
 
-**What I did:** Added architecture documentation and mapped the system flow across frontend, backend logic, storage, and optional Anthropic summaries.
+**What I did:** Added architecture documentation and mapped the system flow across frontend, backend logic, storage, and optional Gemini summaries.
 
 **What I learned:** The documentation needs to track pivots immediately; stale FastAPI references became misleading after the TypeScript migration.
 
@@ -64,7 +64,7 @@
 
 **Hours worked:** 8
 
-**What I did:** Migrated the Python/FastAPI backend logic into the same Next project as an Express backend server. Replaced Pydantic with Zod schemas, moved audit math into pure TypeScript, kept Supabase and Anthropic optional, moved the app from `frontend/` to the repo root, and removed the old `backend/` and `frontend/` folders.
+**What I did:** Migrated the Python/FastAPI backend logic into the same Next project as an Express backend server. Replaced Pydantic with Zod schemas, moved audit math into pure TypeScript, kept Supabase and Gemini optional, moved the app from `frontend/` to the repo root, and removed the old `backend/` and `frontend/` folders.
 
 **What I learned:** One-port full-stack architecture needs clear route ownership. Express initially shadowed `/` and `/share/:auditId`; the fix was to let Next own pages and move backend routes to `/api/*`.
 
@@ -77,6 +77,18 @@
 **Hours worked:** 2
 
 **What I did:** Updated mandatory documentation for the final architecture, tests, prompts, pricing assumptions, and reflection. Verified the app with lint, build, tests, and same-port API checks.
+
+## Day 8
+
+**Hours worked:** 2
+
+**What I did:** Enforced Supabase as the required database provider, kept Gemini as the only LLM provider, added `/api/audit/calculate`, added the public `/audit/:uuid` route, and documented the Supabase `audits` and `leads` schema.
+
+**What I learned:** Provider requirements should be encoded in both runtime configuration and documentation; optional fallback language can contradict production architecture.
+
+**Blockers:** Full Supabase integration QA requires real `SUPABASE_URL` and server-side secret/service-role credentials.
+
+**Plan for tomorrow:** Run against the production Supabase project, capture final screenshots, and add a disposable Supabase integration test path.
 
 **What I learned:** The strongest architecture for this MVP is not “frontend plus backend service”; it is one Next application with React pages and an Express API namespace.
 

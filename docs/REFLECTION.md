@@ -10,7 +10,7 @@ I reversed the original split-stack backend decision. The project began with a P
 
 ## 3. What is the week-2 roadmap?
 
-Week 2 should focus on production readiness and better financial accuracy. First, verify every price in `server/pricingData.ts` against official vendor pages and update `PRICING_DATA.md` with final dates. Second, add token-volume inputs for OpenAI and Anthropic API spend so usage-based recommendations can become more precise. Third, add Supabase schema migrations, indexes, and a deployment checklist. Fourth, capture screenshots and a short demo video for the README. Fifth, add browser-level Playwright tests for the audit flow, lead capture, and public share page. Finally, add rate limiting and structured logging for `/api/audit` and `/api/lead`.
+Week 2 should focus on production readiness and better financial accuracy. First, verify every price in `server/pricingData.ts` against official vendor pages and update `PRICING_DATA.md` with final dates. Second, add token-volume inputs for usage-based API spend so recommendations can become more precise. Third, add Supabase schema migrations, indexes, and a deployment checklist. Fourth, capture screenshots and a short demo video for the README. Fifth, add browser-level Playwright tests for the audit flow, lead capture, and public audit page. Finally, add rate limiting and structured logging for `/api/audit/calculate` and `/api/lead`.
 
 ## 4. How did AI tools help, and where did they make mistakes?
 
