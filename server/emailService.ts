@@ -8,8 +8,12 @@ function money(value: number): string {
 
 export async function sendAuditConfirmationEmail(lead: Lead, audit: AuditResult, publicUrl: string): Promise<EmailResult> {
   const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.EMAIL_FROM ?? "BillAudit <onboarding@resend.dev>";
+  const from = process.env.EMAIL_FROM;
   if (!apiKey) return "skipped";
+  if (!from) {
+    console.error("Resend email failed: EMAIL_FROM is not set.");
+    return "failed";
+  }
 
   const highSavingsLine = audit.savings_level === "high"
     ? "This is a high-savings case. Credex will reach out with renewal cleanup options."
@@ -38,6 +42,8 @@ export async function sendAuditConfirmationEmail(lead: Lead, audit: AuditResult,
   });
 
   if (!response.ok) {
+    const errorBody = await response.text().catch(() => "Unable to read Resend error body.");
+    console.error(`Resend email failed with status ${response.status}: ${errorBody}`);
     return "failed";
   }
   return "sent";

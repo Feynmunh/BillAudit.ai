@@ -12,13 +12,13 @@ npm run build
 
 - `npm run test` runs the automated Vitest suite under `server/`.
 - `npm run lint` runs ESLint across the Next/React frontend and Express backend TypeScript files.
-- `npm run build` runs `next build` and `tsc -p tsconfig.server.json`, so both the React app and Express server type-check.
+- `npm run build` runs `next build` and `tsc -p tsconfig.server.json`, so the React app, native route handlers, and local Express server type-check.
 
 ## GitHub Actions CI
 
 The workflow lives at `.github/workflows/ci.yml`.
 
-It runs on pushes and pull requests to `main`:
+It runs on pushes and pull requests to `main`. The workflow provides a non-production `DATABASE_URL` fallback for build/type-check stability; production deployments still need the real Supabase connection string.
 
 1. `npm ci`
 2. `npm run test`
@@ -52,10 +52,12 @@ Manual same-port QA was run against `http://127.0.0.1:3000`:
 - `POST /api/lead` stores optional company, role, team size, and a Gemini lead brief; email sends when `RESEND_API_KEY` is configured.
 - `GET /api/share/:auditId` returned the PII-safe public JSON.
 - `GET /audit/:uuid` rendered the Next public audit page.
+- Browser QA should also confirm logo-only audit tabs, no horizontal overflow, and no missing `/tool-logos/*.svg` assets.
 
 ## Remaining test gaps
 
 - Add Playwright tests for the full browser audit and lead-capture flow.
+- Add Playwright tests for compact spend-audit tabs and horizontal-overflow regression coverage.
 - Add Drizzle/Postgres integration tests with a disposable test project.
 - Add summary-service tests for Gemini success, missing key, and failure fallback.
 - Add explicit rate-limit and honeypot tests around `/api/lead`.

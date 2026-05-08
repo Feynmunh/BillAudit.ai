@@ -133,17 +133,270 @@ select {
 
 .tool-row {
   display: grid;
-  gap: 1rem;
+  gap: 1.6rem;
   align-items: center;
-  border: 1px solid rgb(0 0 0 / 0.08);
+  border: 0;
   border-radius: 0;
-  background: #ffffff;
-  padding: 1rem;
+  background: transparent;
+  padding: 0;
 }
 
 @media (min-width: 1024px) {
   .tool-row {
-    grid-template-columns: 0.46fr 1fr;
+    grid-template-columns: 0.38fr 1fr;
+  }
+}
+
+.audit-section {
+  background: #030303;
+  border-top: 1px solid rgb(255 255 255 / 0.12);
+  border-bottom: 1px solid rgb(255 255 255 / 0.12);
+  padding: 4rem 1rem 4.75rem;
+  color: #ffffff;
+}
+
+@media (min-width: 1024px) {
+  .audit-section {
+    padding: 4.75rem 2rem 5.75rem;
+  }
+}
+
+.audit-copy-panel {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+@media (min-width: 1024px) {
+  .audit-copy-panel {
+    grid-template-columns: 1.05fr 0.95fr;
+    align-items: end;
+  }
+
+  .audit-copy-panel > p,
+  .audit-copy-panel > h2 {
+    grid-column: 1;
+  }
+
+  .audit-metric-stack {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    align-self: center;
+  }
+}
+
+.audit-metric-stack {
+  display: grid;
+  margin-top: 1rem;
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+  font-size: clamp(0.9rem, 1.5vw, 1.3rem);
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.audit-metric-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  border-bottom: 1px solid rgb(255 255 255 / 0.16);
+  padding: 1.15rem 0;
+  color: rgb(255 255 255 / 0.58);
+}
+
+.audit-metric-row strong {
+  color: #ffffff;
+}
+
+.audit-console {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgb(248 247 242 / 0.28);
+  background: #f8f7f2;
+  color: #111111;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.6), 0 38px 100px rgb(0 0 0 / 0.5);
+}
+
+.audit-tabs {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  flex-wrap: wrap;
+  overflow: visible;
+  border-bottom: 2px solid #111111;
+  background: #f8f7f2;
+  scrollbar-width: thin;
+}
+
+.audit-tab {
+  display: flex;
+  flex: 0 0 5rem;
+  min-height: 4.45rem;
+  max-width: 5.5rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  border: 0;
+  border-right: 2px solid #111111;
+  border-bottom: 2px solid #111111;
+  background: #f8f7f2;
+  color: rgb(17 17 17 / 0.72);
+  padding: 0 0.8rem;
+  font-size: clamp(0.95rem, 1.1vw, 1.14rem);
+  font-weight: 650;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+  transition: background 160ms ease, color 160ms ease, box-shadow 160ms ease;
+}
+
+.audit-tab:hover,
+.audit-tab-active {
+  background: #fffde8;
+  color: #111111;
+  box-shadow: inset 0 -5px 0 #17e86f;
+}
+
+.audit-tool-picker {
+  position: relative;
+  flex: 0 1 12rem;
+  min-height: 4.45rem;
+  border-bottom: 2px solid #111111;
+  border-right: 2px solid #111111;
+}
+
+.audit-add-tool {
+  display: flex;
+  height: 100%;
+  min-height: 4.45rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  background: #111111;
+  color: #f8f7f2;
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  list-style: none;
+  text-transform: uppercase;
+}
+
+.audit-add-tool::-webkit-details-marker {
+  display: none;
+}
+
+.audit-tool-menu {
+  position: absolute;
+  z-index: 20;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  display: grid;
+  width: min(18rem, calc(100vw - 2rem));
+  border: 2px solid #111111;
+  background: #f8f7f2;
+  box-shadow: 8px 8px 0 #17e86f;
+}
+
+.audit-tool-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  border: 0;
+  border-bottom: 1px solid rgb(17 17 17 / 0.14);
+  background: transparent;
+  padding: 0.9rem;
+  text-align: left;
+  font-weight: 650;
+}
+
+.audit-tool-menu-item:hover {
+  background: #fffde8;
+}
+
+.tool-logo-frame {
+  display: inline-grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: 0 0 auto;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgb(17 17 17 / 0.12);
+  background: rgb(255 255 255 / 0.72);
+}
+
+.tool-logo-image {
+  display: block;
+  width: 72%;
+  height: 72%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+}
+
+.tool-logo-frame-large {
+  width: 5.8rem;
+  height: 5.8rem;
+  border: 2px solid rgb(17 17 17 / 0.12);
+  background: #ffffff;
+  box-shadow: 0 0 0 6px rgb(23 232 111 / 0.1);
+}
+
+.audit-detail-panel {
+  display: grid;
+  gap: 1.5rem;
+  padding: 1.4rem;
+  background: #f8f7f2;
+}
+
+@media (min-width: 768px) {
+  .audit-detail-panel {
+    padding: 2rem 2.25rem;
+  }
+}
+
+.audit-setup-grid {
+  display: grid;
+  gap: 1rem;
+  border-bottom: 1px solid rgb(17 17 17 / 0.12);
+  padding-bottom: 1.6rem;
+}
+
+@media (min-width: 768px) {
+  .audit-setup-grid {
+    grid-template-columns: 0.75fr 1fr;
+  }
+}
+
+.tool-identity {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.audit-action-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: stretch;
+  justify-content: space-between;
+  border-top: 1px solid rgb(17 17 17 / 0.12);
+  padding: 1.2rem 1.4rem 1.6rem;
+  background: #f8f7f2;
+}
+
+@media (min-width: 768px) {
+  .audit-action-row {
+    flex-direction: row;
+    align-items: center;
+    padding: 1.35rem 2.25rem 1.85rem;
   }
 }
 

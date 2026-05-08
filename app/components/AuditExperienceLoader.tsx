@@ -5,22 +5,55 @@ import { useEffect, useRef, useState, type ComponentType } from "react";
 function AuditPlaceholder() {
   return (
     <>
-      <section id="audit" className="bg-[#f8f7f2] px-5 py-14 lg:px-10 lg:py-20">
-        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.78fr_1.22fr]">
-          <div className="lg:sticky lg:top-8 lg:self-start">
-            <p className="font-mono text-xs uppercase tracking-[0.24em] text-black/45">Spend input</p>
-            <h2 className="mt-4 max-w-xl text-4xl font-semibold leading-[0.98] tracking-[-0.04em] lg:text-6xl">
-              A cleaner way to map AI spend.
+      <section id="audit" className="audit-section">
+        <div className="mx-auto grid max-w-[72rem] gap-8 px-0 sm:px-4">
+          <div className="audit-copy-panel">
+            <p className="font-mono text-xs uppercase tracking-[0.24em] text-white/55">Spend input</p>
+            <h2 className="mt-5 max-w-3xl text-[clamp(3.2rem,6.4vw,6.8rem)] font-semibold leading-[0.93] tracking-[-0.07em] text-white">
+              A cleaner way to burn before renewal.
             </h2>
-            <p className="mt-5 max-w-md text-lg leading-relaxed text-black/60">
+            <p className="mt-7 max-w-2xl text-xl leading-[1.35] text-white/65 lg:text-2xl">
               The audit form loads as you reach it so the mobile homepage stays fast.
             </p>
+            <div className="audit-metric-stack">
+              <div className="audit-metric-row"><span>Selected</span><strong>2</strong></div>
+              <div className="audit-metric-row"><span>Monthly spend</span><strong>$110</strong></div>
+              <div className="audit-metric-row"><span>Autosave</span><strong>On</strong></div>
+            </div>
           </div>
-          <div className="border border-black/10 bg-[#f8f7f2] p-5 shadow-[0_30px_80px_rgb(0_0_0/0.08)]" aria-busy="true">
-            <div className="grid gap-3">
-              {Array.from({ length: 5 }, (_, index) => (
-                <div key={index} className="h-20 border border-black/10 bg-[#f8f7f2]" />
+          <div className="audit-console" aria-busy="true">
+            <div className="audit-tabs" aria-hidden="true">
+              {Array.from({ length: 4 }, (_, index) => (
+                <div key={index} className={`audit-tab ${index === 0 ? "audit-tab-active" : ""}`}>
+                  <span className="tool-logo-frame">
+                    <span className="tool-logo-image bg-black/30" />
+                  </span>
+                </div>
               ))}
+              <div className="audit-tool-picker">
+                <div className="audit-add-tool">+ Add AI tool</div>
+              </div>
+            </div>
+            <div className="audit-detail-panel">
+              <div className="audit-setup-grid">
+                {Array.from({ length: 2 }, (_, index) => (
+                  <div key={index} className="h-20 border border-black/10 bg-[#fbfaf7]" />
+                ))}
+              </div>
+              <div className="tool-row">
+                <div className="flex min-w-0 items-center gap-5">
+                  <div className="h-24 w-24 border-2 border-black/10 bg-white" />
+                  <div className="grid flex-1 gap-3">
+                    <div className="h-8 border border-black/10 bg-[#fffde8]" />
+                    <div className="h-4 w-2/3 border border-black/10 bg-[#fbfaf7]" />
+                  </div>
+                </div>
+                <div className="grid gap-3 md:grid-cols-4">
+                  {Array.from({ length: 4 }, (_, index) => (
+                    <div key={index} className="h-20 border border-black/10 bg-[#fbfaf7]" />
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>

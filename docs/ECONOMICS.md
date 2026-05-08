@@ -9,7 +9,7 @@ Funnel assumptions
 ------------------
 - Visitor runs audit without login.
 - Savings number creates urgency.
-- Email capture unlocks benchmark and share URL.
+- Email capture unlocks benchmark context and sends the audit confirmation to the user-entered address.
 - High-savings users become Credex leads.
 
 Savings tiers
@@ -21,3 +21,7 @@ Savings tiers
 Commercial angle
 ----------------
 Credex can use BillAudit as a wedge into AI infrastructure optimization, vendor consolidation, usage analytics, and procurement advisory.
+
+Implementation note
+-------------------
+The current MVP reduces funnel friction with same-origin API calls, no external auth step, compact logo-only tool selection, and Resend transactional email after lead capture. Supabase Postgres keeps audit/share URLs durable enough for follow-up sales workflows.

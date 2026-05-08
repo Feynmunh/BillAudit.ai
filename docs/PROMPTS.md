@@ -2,7 +2,7 @@
 
 ## Personalized summary prompt
 
-The production prompt is built in `server/summaryService.ts` and sent to Gemini only when `GEMINI_API_KEY` or `GOOGLE_API_KEY` is configured.
+The production prompt is built in `server/summaryService.ts` and sent to Gemini only when `GEMINI_API_KEY` or `GOOGLE_API_KEY` is configured. Gemini is the only LLM provider used by the backend.
 
 ```text
 Write a concise 90-110 word executive summary for an AI spend audit. Be finance-literate, specific, and avoid hype. Do not mention private data. Monthly spend: $<total_monthly_spend>. Monthly savings: $<total_monthly_savings>. Annual savings: $<total_annual_savings>. Savings level: <savings_level>. Recommendations: <tool_id>: save $<monthly_savings>/mo by using <recommended_plan>; ...
@@ -33,7 +33,7 @@ AI summary fallback used because the LLM request failed: <ErrorName>.
 
 ## Internal lead brief prompt
 
-After lead capture, the backend asks Gemini for a 45-word internal Credex brief using only the optional company, role, team size, savings totals, and savings level. The output is stored in `leads.lead_summary` and is never shown on the public audit URL.
+After lead capture, the backend asks Gemini for a 45-word internal Credex brief using only the optional company, role, team size, savings totals, and savings level. The output is stored in `leads.lead_summary`, is never shown on the public audit URL, and is separate from the Resend confirmation email sent to the user-entered address.
 
 ## Failed iterations
 

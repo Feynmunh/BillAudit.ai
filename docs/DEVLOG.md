@@ -95,3 +95,15 @@
 **Blockers:** Screenshots/video links are still pending final capture. Pricing still needs a final live vendor recheck before public submission.
 
 **Plan for tomorrow:** Add deployment links, screenshots, and final source verification dates after production deployment.
+
+## Day 9
+
+**Hours worked:** 5
+
+**What I did:** Made the API Vercel-compatible by adding native Next route handlers for audit calculation, lead capture, and public share data while keeping the local Express server path intact. Updated the spend-audit UI to use logo-only tabs, local SVG logo assets, compact wrapping, and the existing black/green rectangular button style. Fixed the CI `DATABASE_URL` build failure with a safe workflow fallback and removed generated Playwright/Sisyphus artifacts from the PR.
+
+**What I learned:** Same-origin API paths are safer than environment-built client URLs for a single Next app because they work locally and on Vercel. Local logo assets also remove an avoidable production dependency on remote image hosts.
+
+**Blockers:** Final screenshots/video and production Supabase/Resend smoke tests still need deployment credentials and a live domain.
+
+**Plan for tomorrow:** Capture final browser QA, verify email delivery from the verified Resend domain, and recheck PR review comments before merge.
