@@ -57,8 +57,8 @@ describe("AuditEngine", () => {
     expect(result.audit_id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
   });
 
-  it("accepts a bounded use case description", () => {
-    const parsed = auditRequestSchema.safeParse({ use_case: "Engineering copilots and finance research", tools: [{ tool_id: "cursor", current_plan: "Pro", monthly_spend: 20 }] });
+  it("accepts a supported primary use case", () => {
+    const parsed = auditRequestSchema.safeParse({ use_case: "coding", tools: [{ tool_id: "cursor", current_plan: "Pro", monthly_spend: 20 }] });
     expect(parsed.success).toBe(true);
   });
 

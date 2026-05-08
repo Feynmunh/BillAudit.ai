@@ -5,7 +5,7 @@ import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
-import { auditRequestSchema, leadSchema, type AuditRequest, type AuditResponse, type AuditResult, type Lead } from "../server/models";
+import { auditRequestSchema, leadSchema, type AuditRequest, type AuditResponse, type AuditResult, type Lead, type UseCase } from "../server/models";
 
 type BillingCycle = "monthly" | "annual";
 type SavingsLevel = AuditResult["savings_level"];
@@ -16,6 +16,7 @@ type ToolConfig = {
   category: string;
   accent: string;
   defaultPlan: string;
+  plans: string[];
 };
 
 type ToolSpend = {
@@ -28,14 +29,30 @@ type ToolSpend = {
   teamSize: string;
 };
 
+type SavedSpendForm = {
+  version: 2;
+  form: ToolSpend[];
+  teamSize: string;
+  useCase: UseCase;
+};
+
+const useCaseOptions: Array<{ value: UseCase; label: string }> = [
+  { value: "coding", label: "Coding" },
+  { value: "writing", label: "Writing" },
+  { value: "data", label: "Data" },
+  { value: "research", label: "Research" },
+  { value: "mixed", label: "Mixed" },
+];
+
 const tools: ToolConfig[] = [
-  { id: "cursor", name: "Cursor", category: "Coding", accent: "#19e272", defaultPlan: "Pro" },
-  { id: "github_copilot", name: "Copilot", category: "Coding", accent: "#7c3cff", defaultPlan: "Business" },
-  { id: "claude", name: "Claude", category: "Chat", accent: "#ff6b2b", defaultPlan: "Pro" },
-  { id: "chatgpt", name: "ChatGPT", category: "Chat", accent: "#0ea5e9", defaultPlan: "Team" },
-  { id: "gemini", name: "Gemini", category: "Chat", accent: "#f6d743", defaultPlan: "Advanced" },
-  { id: "windsurf", name: "Windsurf", category: "Coding", accent: "#10b981", defaultPlan: "Pro" },
-  { id: "openai_api", name: "API Spend", category: "API", accent: "#ff8bd2", defaultPlan: "Pay-as-you-go" },
+  { id: "cursor", name: "Cursor", category: "Coding", accent: "#19e272", defaultPlan: "Pro", plans: ["Hobby", "Pro", "Business", "Enterprise"] },
+  { id: "github_copilot", name: "GitHub Copilot", category: "Coding", accent: "#7c3cff", defaultPlan: "Business", plans: ["Individual", "Business", "Enterprise"] },
+  { id: "claude", name: "Claude", category: "Chat", accent: "#ff6b2b", defaultPlan: "Pro", plans: ["Free", "Pro", "Max", "Team", "Enterprise", "API direct"] },
+  { id: "chatgpt", name: "ChatGPT", category: "Chat", accent: "#0ea5e9", defaultPlan: "Team", plans: ["Plus", "Team", "Enterprise", "API direct"] },
+  { id: "anthropic_api", name: "Anthropic API", category: "API", accent: "#ff8bd2", defaultPlan: "API direct", plans: ["API direct"] },
+  { id: "openai_api", name: "OpenAI API", category: "API", accent: "#f97316", defaultPlan: "API direct", plans: ["API direct"] },
+  { id: "gemini", name: "Gemini", category: "Chat", accent: "#f6d743", defaultPlan: "Pro", plans: ["Pro", "Ultra", "API"] },
+  { id: "windsurf", name: "Windsurf", category: "Coding", accent: "#10b981", defaultPlan: "Pro", plans: ["Pro", "Teams", "Enterprise"] },
 ];
 
 const emptyForm = tools.map((tool) => ({
@@ -48,7 +65,8 @@ const emptyForm = tools.map((tool) => ({
   teamSize: "1",
 }));
 
-const storageKey = "billaudit.spend-form.v1";
+const storageKey = "billaudit.spend-form.v2";
+const legacyStorageKey = "billaudit.spend-form.v1";
 
 function currency(value: number): string {
   return new Intl.NumberFormat("en-US", {
@@ -61,6 +79,30 @@ function currency(value: number): string {
 function numeric(value: string): number {
   const parsed = Number(value);
   return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
+}
+
+function normalizeForm(saved: ToolSpend[]): ToolSpend[] {
+  return emptyForm.map((fallback) => {
+    const current = saved.find((tool) => tool.toolId === fallback.toolId);
+    if (!current) {
+      return fallback;
+    }
+    const config = tools.find((tool) => tool.id === fallback.toolId);
+    const currentPlan = config?.plans.includes(current.currentPlan) ? current.currentPlan : fallback.currentPlan;
+    return { ...fallback, ...current, currentPlan };
+  });
+}
+
+function isUseCase(value: unknown): value is UseCase {
+  return typeof value === "string" && useCaseOptions.some((option) => option.value === value);
+}
+
+function isSavedSpendForm(value: unknown): value is SavedSpendForm {
+  if (!value || typeof value !== "object") {
+    return false;
+  }
+  const candidate = value as Partial<SavedSpendForm>;
+  return Array.isArray(candidate.form) && typeof candidate.teamSize === "string" && isUseCase(candidate.useCase);
 }
 
 function levelCopy(level: SavingsLevel): { label: string; title: string; body: string } {
@@ -93,7 +135,8 @@ export default function Home() {
   const [role, setRole] = useState("");
   const [leadTeamSize, setLeadTeamSize] = useState("1");
   const [website, setWebsite] = useState("");
-  const [useCase, setUseCase] = useState("");
+  const [teamSize, setTeamSize] = useState("1");
+  const [useCase, setUseCase] = useState<UseCase>("mixed");
   const [status, setStatus] = useState<"idle" | "loading" | "error" | "sent">("idle");
   const [message, setMessage] = useState("");
   const formLoaded = useRef(false);
@@ -102,12 +145,20 @@ export default function Home() {
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
-      const saved = window.localStorage.getItem(storageKey);
+      const saved = window.localStorage.getItem(storageKey) ?? window.localStorage.getItem(legacyStorageKey);
       if (saved) {
         try {
-          setForm(JSON.parse(saved) as ToolSpend[]);
+          const parsed = JSON.parse(saved) as unknown;
+          if (Array.isArray(parsed)) {
+            setForm(normalizeForm(parsed as ToolSpend[]));
+          } else if (isSavedSpendForm(parsed)) {
+            setForm(normalizeForm(parsed.form));
+            setTeamSize(parsed.teamSize);
+            setUseCase(parsed.useCase);
+          }
         } catch {
           window.localStorage.removeItem(storageKey);
+          window.localStorage.removeItem(legacyStorageKey);
         }
       }
       formLoaded.current = true;
@@ -119,8 +170,8 @@ export default function Home() {
     if (!formLoaded.current) {
       return;
     }
-    window.localStorage.setItem(storageKey, JSON.stringify(form));
-  }, [form]);
+    window.localStorage.setItem(storageKey, JSON.stringify({ version: 2, form, teamSize, useCase } satisfies SavedSpendForm));
+  }, [form, teamSize, useCase]);
 
   const selectedCount = useMemo(() => form.filter((tool) => tool.enabled).length, [form]);
   const declaredSpend = useMemo(
@@ -139,6 +190,8 @@ export default function Home() {
     setStatus("loading");
     setMessage("");
 
+    const computedTeamSize = Math.max(1, Math.round(numeric(teamSize)));
+
     const payload: AuditRequest = {
       tools: form
         .filter((tool) => tool.enabled)
@@ -150,8 +203,8 @@ export default function Home() {
           billing_cycle: tool.billingCycle,
           team_size: Math.max(1, Math.round(numeric(tool.teamSize))),
         })),
-      team_size: 1,
-      use_case: useCase || null,
+      team_size: computedTeamSize,
+      use_case: useCase,
       include_alternatives: true,
     };
 
@@ -222,7 +275,7 @@ export default function Home() {
         throw new Error("Lead capture failed.");
       }
       setStatus("sent");
-      const json = (await response.json()) as { public_url?: string; email_status?: "sent" | "skipped" };
+      const json = (await response.json()) as { public_url?: string; email_status?: "sent" | "skipped" | "failed" };
       setMessage(`AI brief saved. Share URL: ${json.public_url ?? `/audit/${result.audit_id}`}${json.email_status === "sent" ? " · Email sent" : ""}`);
     } catch (error) {
       setStatus("error");
@@ -305,7 +358,7 @@ export default function Home() {
               A cleaner way to map AI spend.
             </h2>
             <p className="mt-5 max-w-md text-lg leading-relaxed text-black/60">
-              Choose the tools you pay for, enter the current plan, use case, and monthly spend, then run the audit.
+              Choose the tools you pay for, set team size and use case, then enter each plan, monthly spend, and seats.
             </p>
             <div className="mt-8 grid gap-3 font-mono text-xs uppercase tracking-[0.12em]">
               <div className="metric-row"><span>Selected</span><strong>{selectedCount}</strong></div>
@@ -316,10 +369,18 @@ export default function Home() {
 
           <form onSubmit={runAudit} className="border border-black/10 bg-white p-4 shadow-[0_30px_80px_rgb(0_0_0/0.08)] lg:p-5">
             <div className="grid gap-3">
-              <label className="field-label bg-[#f8f7f2] p-4">
-                Primary use case
-                <textarea value={useCase} onChange={(event) => setUseCase(event.target.value)} maxLength={500} className="field-input min-h-24" placeholder="Example: engineering copilots, support research, finance workflows, or product prototyping" />
-              </label>
+              <div className="grid gap-3 bg-[#f8f7f2] p-4 md:grid-cols-[0.85fr_1.15fr]">
+                <label className="field-label">
+                  Team size
+                  <input inputMode="numeric" value={teamSize} onChange={(event) => setTeamSize(event.target.value)} className="field-input" placeholder="Example: 12" />
+                </label>
+                <label className="field-label">
+                  Primary use case
+                  <select value={useCase} onChange={(event) => setUseCase(event.target.value as UseCase)} className="field-input">
+                    {useCaseOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+                  </select>
+                </label>
+              </div>
               {form.map((toolSpend) => {
                 const config = tools.find((tool) => tool.id === toolSpend.toolId);
                 if (!config) {
@@ -342,7 +403,9 @@ export default function Home() {
                     <div className="grid gap-3 md:grid-cols-[1.1fr_0.8fr_0.55fr_0.85fr]">
                       <label className="field-label">
                         Plan
-                        <input value={toolSpend.currentPlan} onChange={(event) => updateTool(toolSpend.toolId, { currentPlan: event.target.value })} className="field-input" />
+                        <select value={toolSpend.currentPlan} onChange={(event) => updateTool(toolSpend.toolId, { currentPlan: event.target.value })} className="field-input">
+                          {config.plans.map((plan) => <option key={plan} value={plan}>{plan}</option>)}
+                        </select>
                       </label>
                       <label className="field-label">
                         Monthly $
@@ -447,23 +510,35 @@ export default function Home() {
             </div>
           )}
         </div>
-        <form onSubmit={captureLead} className="grid content-center gap-4 p-6 lg:p-12">
+        <form onSubmit={captureLead} className="grid content-center gap-4 p-6 lg:p-12" aria-label="AI follow-up details">
           <input tabIndex={-1} autoComplete="off" value={website} onChange={(event) => setWebsite(event.target.value)} className="hidden" aria-hidden="true" name="website" />
           <label className="field-label text-white/60">
-            Work email
-            <input type="email" required value={email} onChange={(event) => setEmail(event.target.value)} className="field-input bg-white text-black" />
+            <span className="flex items-center justify-between gap-3">
+              <span>1. Email address</span>
+              <span className="text-[#17e86f]">required</span>
+            </span>
+            <input type="email" required value={email} onChange={(event) => setEmail(event.target.value)} className="field-input bg-white text-black" placeholder="you@company.com" autoComplete="email" />
           </label>
           <label className="field-label text-white/60">
-            Company <span className="text-white/35">optional</span>
-            <input value={company} onChange={(event) => setCompany(event.target.value)} className="field-input bg-white text-black" placeholder="Acme AI Ops" />
+            <span className="flex items-center justify-between gap-3">
+              <span>2. Company name</span>
+              <span className="text-white/35">optional</span>
+            </span>
+            <input value={company} onChange={(event) => setCompany(event.target.value)} className="field-input bg-white text-black" placeholder="Acme AI Ops" autoComplete="organization" />
           </label>
           <label className="field-label text-white/60">
-            Role <span className="text-white/35">optional</span>
-            <input value={role} onChange={(event) => setRole(event.target.value)} className="field-input bg-white text-black" placeholder="Finance, Founder, Ops" />
+            <span className="flex items-center justify-between gap-3">
+              <span>3. Your role</span>
+              <span className="text-white/35">optional</span>
+            </span>
+            <input value={role} onChange={(event) => setRole(event.target.value)} className="field-input bg-white text-black" placeholder="Founder, Finance, Ops" autoComplete="organization-title" />
           </label>
           <label className="field-label text-white/60">
-            Team size <span className="text-white/35">optional</span>
-            <input inputMode="numeric" value={leadTeamSize} onChange={(event) => setLeadTeamSize(event.target.value)} className="field-input bg-white text-black" />
+            <span className="flex items-center justify-between gap-3">
+              <span>4. Team size</span>
+              <span className="text-white/35">optional</span>
+            </span>
+            <input type="number" min="1" inputMode="numeric" value={leadTeamSize} onChange={(event) => setLeadTeamSize(event.target.value)} className="field-input bg-white text-black" placeholder="Example: 12" />
           </label>
           <button type="submit" className="button-light" disabled={!result || status === "loading"}>{status === "loading" ? "Writing brief..." : "Email me the audit →"}</button>
         </form>

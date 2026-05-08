@@ -3,6 +3,7 @@ import { z } from "zod";
 export const billingCycleSchema = z.enum(["monthly", "annual"]);
 export const toolCategorySchema = z.enum(["coding", "chat", "api", "other"]);
 export const savingsLevelSchema = z.enum(["high", "moderate", "optimal"]);
+export const useCaseSchema = z.enum(["coding", "writing", "data", "research", "mixed"]);
 
 export const pricingTierSchema = z.object({
   name: z.string(),
@@ -37,7 +38,7 @@ export const auditRequestSchema = z.object({
   tools: z.array(userToolSpendSchema).min(1).max(20),
   team_size: z.coerce.number().int().min(1).max(10_000).default(1),
   industry: z.string().nullable().optional(),
-  use_case: z.string().max(500).nullable().optional(),
+  use_case: useCaseSchema.nullable().optional(),
   include_alternatives: z.boolean().default(true),
 }).superRefine((request, context) => {
   const seen = new Set<string>();
@@ -64,6 +65,7 @@ export const leadSchema = z.object({
 export type BillingCycle = z.infer<typeof billingCycleSchema>;
 export type ToolCategory = z.infer<typeof toolCategorySchema>;
 export type SavingsLevel = z.infer<typeof savingsLevelSchema>;
+export type UseCase = z.infer<typeof useCaseSchema>;
 export type PricingTier = z.infer<typeof pricingTierSchema>;
 export type ToolPricing = z.infer<typeof toolPricingSchema>;
 export type UserToolSpend = z.infer<typeof userToolSpendSchema>;

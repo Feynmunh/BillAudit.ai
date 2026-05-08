@@ -1,6 +1,6 @@
 import type { AuditResult, Lead } from "./models.js";
 
-type EmailResult = "sent" | "skipped";
+type EmailResult = "sent" | "skipped" | "failed";
 
 function money(value: number): string {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(value);
@@ -38,7 +38,7 @@ export async function sendAuditConfirmationEmail(lead: Lead, audit: AuditResult,
   });
 
   if (!response.ok) {
-    throw new Error(`Resend email failed with status ${response.status}`);
+    return "failed";
   }
   return "sent";
 }
