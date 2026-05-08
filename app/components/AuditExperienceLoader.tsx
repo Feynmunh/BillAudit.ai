@@ -16,7 +16,7 @@ function AuditPlaceholder() {
               The audit form loads as you reach it so the mobile homepage stays fast.
             </p>
           </div>
-          <div className="border border-black/10 bg-white p-5 shadow-[0_30px_80px_rgb(0_0_0/0.08)]" aria-busy="true">
+          <div className="border border-black/10 bg-[#f8f7f2] p-5 shadow-[0_30px_80px_rgb(0_0_0/0.08)]" aria-busy="true">
             <div className="grid gap-3">
               {Array.from({ length: 5 }, (_, index) => (
                 <div key={index} className="h-20 border border-black/10 bg-[#f8f7f2]" />

@@ -26,26 +26,6 @@ body {
   font-family: var(--font-geist-sans), Helvetica, Arial, sans-serif;
 }
 
-.skip-link {
-  position: fixed;
-  left: 1rem;
-  top: 1rem;
-  z-index: 50;
-  transform: translateY(-150%);
-  background: #111111;
-  color: #ffffff;
-  padding: 0.75rem 1rem;
-  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.skip-link:focus {
-  transform: translateY(0);
-}
-
 button,
 input,
 select {
@@ -172,7 +152,7 @@ select {
   inset: 2rem;
   overflow: hidden;
   border: 1px dashed rgb(0 0 0 / 0.18);
-  background: #ffffff;
+  background: #f8f7f2;
   box-shadow: none;
 }
 

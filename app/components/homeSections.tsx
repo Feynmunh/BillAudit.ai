@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { memo } from "react";
 import type { AuditResult, UseCase } from "../../server/models";
 import { currency, type BillingCycle, type FormSubmitHandler, type LevelCopy, type Status, type ToolConfig, type ToolSpend, useCaseOptions } from "./billauditData";
@@ -12,10 +13,9 @@ export function TopBanner() {
 
 export function Header() {
   return (
-    <nav className="flex items-center justify-between border-b border-black/10 bg-white/90 px-5 py-5 backdrop-blur lg:px-10">
-      <a href="#top" className="flex items-center gap-3" aria-label="BillAudit home">
-        <span className="grid h-9 w-9 place-items-center rounded-xl bg-black text-xl font-semibold text-[#17e86f]">B</span>
-        <span className="text-2xl font-medium tracking-tight">billaudit</span>
+    <nav className="flex items-center justify-between border-b border-black/10 bg-[#f8f7f2]/90 px-5 py-5 backdrop-blur lg:px-10">
+      <a href="#top" className="flex items-center" aria-label="BillAudit home">
+        <Image src="/billaudit-logo-cropped.png" alt="BillAudit" width={72} height={80} className="h-14 w-auto object-contain" priority />
       </a>
       <div className="hidden items-center gap-8 font-mono text-xs uppercase tracking-[0.16em] text-black/60 md:flex">
         <a href="#audit">Audit</a>
@@ -29,7 +29,7 @@ export function Header() {
 
 export function Hero() {
   return (
-    <section id="top" className="grid min-h-[680px] border-b border-black/10 bg-white lg:grid-cols-[1fr_0.9fr]">
+    <section id="top" className="grid min-h-[680px] border-b border-black/10 bg-[#f8f7f2] lg:grid-cols-[1fr_0.9fr]">
       <div className="flex flex-col justify-center border-b border-black/10 p-6 lg:border-b-0 lg:border-r lg:p-12">
         <p className="mb-6 font-mono text-xs uppercase tracking-[0.28em] text-black/50">AI finance control plane</p>
         <h1 className="max-w-4xl text-[clamp(3.4rem,7.6vw,7.4rem)] font-semibold leading-[0.92] tracking-[-0.07em]">
@@ -70,7 +70,7 @@ export function Hero() {
 
 export function OperatorPromises() {
   return (
-    <section className="grid border-b border-black/10 bg-white md:grid-cols-3">
+    <section className="grid border-b border-black/10 bg-[#f8f7f2] md:grid-cols-3">
       {["No login gate before value", "Finance-literate recommendations", "Public audit link for sharing"].map((item) => (
         <div key={item} className="border-b border-black/10 p-6 md:border-b-0 md:border-r last:border-r-0">
           <p className="font-mono text-[0.7rem] uppercase tracking-[0.24em] text-black/40">Operator promise</p>
@@ -236,7 +236,7 @@ const RecommendationCard = memo(function RecommendationCard({ rec }: { rec: Audi
 
 export function ResultsSection({ result, level }: ResultsSectionProps) {
   return (
-    <section id="results" className="border-y border-black/10 bg-white p-5 lg:p-10">
+    <section id="results" className="border-y border-black/10 bg-[#f8f7f2] p-5 lg:p-10">
       <div className="mb-10 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <p className="font-mono text-xs uppercase tracking-[0.24em] text-black/45">Audit dashboard</p>

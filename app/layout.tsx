@@ -13,11 +13,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "BillAudit — AI Spend Audit",
+  metadataBase: new URL("https://billaudit.ai"),
+  title: "BillAudit",
   description: "Find overspending across Cursor, Claude, ChatGPT, Gemini and AI API spend.",
   openGraph: {
-    title: "BillAudit — AI Spend Audit",
+    title: "BillAudit",
     description: "Run an instant AI spend audit without login.",
+    images: ["/billaudit-logo.png"],
     type: "website",
   },
 };
@@ -33,7 +35,6 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <a href="#main-content" className="skip-link">Skip to main content</a>
         {children}
       </body>
     </html>
