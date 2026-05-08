@@ -1,9 +1,9 @@
 import { eq } from "drizzle-orm";
 
-import { AuditEngine } from "./auditEngine.js";
-import { db } from "./db/client.js";
-import { audits, leads } from "./db/schema.js";
-import type { AuditResult, Lead, PublicAuditView } from "./models.js";
+import { AuditEngine } from "./auditEngine";
+import { db } from "./db/client";
+import { audits, leads } from "./db/schema";
+import type { AuditResult, Lead, PublicAuditView } from "./models";
 
 export class AuditStore {
   async saveAudit(audit: AuditResult): Promise<void> {

@@ -2,7 +2,7 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import { loadEnvConfig } from "@next/env";
 import postgres from "postgres";
 
-import * as schema from "./schema.js";
+import * as schema from "./schema";
 
 loadEnvConfig(process.cwd());
 

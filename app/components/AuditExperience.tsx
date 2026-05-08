@@ -112,7 +112,7 @@ export function AuditExperience() {
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/audit/calculate`, {
+      const response = await fetch("/api/audit/calculate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -152,7 +152,7 @@ export function AuditExperience() {
       return;
     }
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/lead`, {
+      const response = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(leadPayload),

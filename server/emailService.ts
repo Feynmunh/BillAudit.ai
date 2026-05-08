@@ -1,4 +1,4 @@
-import type { AuditResult, Lead } from "./models.js";
+import type { AuditResult, Lead } from "./models";
 
 type EmailResult = "sent" | "skipped" | "failed";
 

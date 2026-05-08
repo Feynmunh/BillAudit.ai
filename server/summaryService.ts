@@ -1,6 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 
-import type { AuditResult, Lead } from "./models.js";
+import type { AuditResult, Lead } from "./models";
 
 function getGeminiClient(): GoogleGenAI | null {
   const apiKey = process.env.GEMINI_API_KEY ?? process.env.GOOGLE_API_KEY;

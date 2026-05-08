@@ -1,12 +1,12 @@
 import express, { type ErrorRequestHandler, type RequestHandler } from "express";
 import { ZodError } from "zod";
 
-import { AuditEngine } from "./auditEngine.js";
-import { sendAuditConfirmationEmail } from "./emailService.js";
-import { auditRequestSchema, leadSchema } from "./models.js";
-import { getPricingDatabase } from "./pricingData.js";
-import { AuditStore } from "./storage.js";
-import { generateLeadBrief, generatePersonalizedSummary } from "./summaryService.js";
+import { AuditEngine } from "./auditEngine";
+import { sendAuditConfirmationEmail } from "./emailService";
+import { auditRequestSchema, leadSchema } from "./models";
+import { getPricingDatabase } from "./pricingData";
+import { AuditStore } from "./storage";
+import { generateLeadBrief, generatePersonalizedSummary } from "./summaryService";
 
 const leadRateLimit = new Map<string, { count: number; resetAt: number }>();
 

@@ -1,7 +1,7 @@
 import Decimal from "decimal.js";
 
-import type { AuditRequest, AuditResult, BillingCycle, PricingTier, PublicAuditView, ToolPricing, ToolRecommendation } from "./models.js";
-import { PRICING_DATABASE, getToolPricing } from "./pricingData.js";
+import type { AuditRequest, AuditResult, BillingCycle, PricingTier, PublicAuditView, ToolPricing, ToolRecommendation } from "./models";
+import { PRICING_DATABASE, getToolPricing } from "./pricingData";
 
 type TierChoice = { tier_name: string; price_monthly: number; price_annual: number | null; savings: number };
 

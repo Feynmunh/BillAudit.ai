@@ -1,6 +1,6 @@
 import { integer, jsonb, numeric, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
-import type { AuditResult } from "../models.js";
+import type { AuditResult } from "../models";
 
 export const audits = pgTable("audits", {
   auditId: uuid("audit_id").primaryKey(),

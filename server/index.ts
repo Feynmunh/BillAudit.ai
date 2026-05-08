@@ -1,7 +1,7 @@
 import express from "express";
 import next from "next";
 
-import { corsMiddleware, createApiRouter, errorHandler } from "./api.js";
+import { corsMiddleware, createApiRouter, errorHandler } from "./api";
 
 const dev = process.env.NODE_ENV !== "production";
 const port = Number(process.env.PORT ?? 3000);

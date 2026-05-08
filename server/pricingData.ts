@@ -1,4 +1,4 @@
-import type { ToolPricing } from "./models.js";
+import type { ToolPricing } from "./models";
 
 export const PRICING_DATABASE: ToolPricing[] = [
   { tool_id: "cursor", name: "Cursor", category: "coding", url: "https://cursor.com", tiers: [{ name: "Hobby", price_monthly: 0, price_annual: 0, features: ["Basic AI coding assistance"], limits: "Individual free usage" }, { name: "Pro", price_monthly: 20, price_annual: 192, features: ["500 fast requests/mo", "Unlimited slow requests", "GPT-4, Claude 3.5"], limits: "500 fast requests" }, { name: "Business", price_monthly: 40, price_annual: 384, features: ["Unlimited fast requests", "Team features", "Admin dashboard"], limits: "Unlimited" }, { name: "Enterprise", price_monthly: 80, price_annual: 768, features: ["SSO", "Advanced security", "Custom contracts"], limits: "Unlimited" }], free_tier_available: true, pay_as_you_go: false, api_pricing_note: "Per-seat pricing" },

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { AuditEngine, calculateAnnualCost, calculateMonthlyCost } from "./auditEngine.js";
-import { auditRequestSchema } from "./models.js";
+import { AuditEngine, calculateAnnualCost, calculateMonthlyCost } from "./auditEngine";
+import { auditRequestSchema } from "./models";
 
 describe("AuditEngine", () => {
   it("calculates savings for obvious overspend", () => {
