@@ -1,6 +1,6 @@
 # BillAudit architecture
 
-BillAudit is a full-stack Next.js application. Next renders the React frontend pages, and a custom Express server mounted in the same app serves backend API routes under `/api/*` on the same port.
+BillAudit is a full-stack Next.js application. Next renders the React frontend pages and, on Vercel, native App Router route handlers serve backend API routes under `/api/*`. Local development still uses a custom Express server on the same port, but the business logic is shared through `server/` modules so the API contract stays identical.
 
 ## System diagram
 
@@ -11,8 +11,9 @@ flowchart LR
     subgraph App["One Next.js application on :3000"]
         ReactUI["React UI<br/>app/page.tsx"]
         ShareUI["Public audit page<br/>app/audit/[uuid]/page.tsx"]
-        LocalDraft["localStorage<br/>billaudit.spend-form.v1"]
-        Express["Express API<br/>server/index.ts + server/api.ts"]
+        LocalDraft["localStorage<br/>billaudit.spend-form.v2"]
+        NextAPI["Next route handlers<br/>app/api/*/route.ts"]
+        Express["Local Express API<br/>server/index.ts + server/api.ts"]
         Engine["Pure TS audit engine<br/>server/auditEngine.ts"]
         Pricing["Typed pricing seed data<br/>server/pricingData.ts"]
         Schemas["Zod request schemas<br/>server/models.ts"]
@@ -30,17 +31,20 @@ flowchart LR
     User --> ReactUI
     User --> ShareUI
     ReactUI <--> LocalDraft
-    ReactUI -- "POST /api/audit/calculate" --> Express
-    ReactUI -- "POST /api/lead" --> Express
-    ShareUI -- "GET /api/share/{uuid}" --> Express
+    ReactUI -- "POST /api/audit/calculate" --> NextAPI
+    ReactUI -- "POST /api/lead" --> NextAPI
+    ShareUI -- "GET /api/share/{uuid}" --> NextAPI
+    ReactUI -. "local dev same routes" .-> Express
+    NextAPI --> Schemas
+    NextAPI --> Engine
     Express --> Schemas
     Express --> Engine
     Engine --> Pricing
-    Express --> Summary
+    NextAPI --> Summary
     Summary -. "GEMINI_API_KEY present" .-> Gemini
-    Express --> Email
+    NextAPI --> Email
     Email -. "RESEND_API_KEY present" .-> Resend
-    Express --> Store
+    NextAPI --> Store
     Store -- "DATABASE_URL" --> Database
     Store --> Engine
 ```
@@ -48,19 +52,19 @@ flowchart LR
 ## Data flow
 
 1. The user opens `/`, which is rendered by Next and React from `app/page.tsx`.
-2. Spend inputs are autosaved in browser `localStorage` under `billaudit.spend-form.v1`.
-3. Clicking “Run spend audit” sends `POST /api/audit/calculate` to the Express router on the same server.
+2. Spend inputs are autosaved in browser `localStorage` under `billaudit.spend-form.v2`, with legacy `v1` drafts normalized into the current tool list.
+3. Clicking “Run spend audit” sends `POST /api/audit/calculate` as a same-origin request. Vercel handles it through `app/api/audit/calculate/route.ts`; local dev can handle the same route through Express.
 4. Zod validates the audit request: 1-20 tools, unique `tool_id`, team size bounds, billing cycle, non-negative spend, and maximum monthly spend.
 5. `server/auditEngine.ts` computes normalized monthly spend, tier matching, recommended plan, savings, annual totals, savings percentage, and fallback summary.
 6. `server/summaryService.ts` uses Gemini only when `GEMINI_API_KEY` or `GOOGLE_API_KEY` exists; otherwise it returns the deterministic fallback summary.
 7. `server/storage.ts` uses Drizzle ORM to upsert the audit to the Postgres `audits` table. Missing `DATABASE_URL` is a server configuration error.
-8. Lead capture sends `POST /api/lead`; honeypot and IP rate-limit checks run first, Gemini writes a short internal lead brief, the lead is inserted into Postgres through Drizzle, and Resend sends a confirmation email when configured.
+8. Lead capture sends `POST /api/lead`; honeypot and IP rate-limit checks run first, Gemini writes a short internal lead brief, the lead is inserted into Postgres through Drizzle, and Resend sends a confirmation email to the user-entered address when `RESEND_API_KEY` and a verified `EMAIL_FROM` are configured.
 9. Public audit pages render at `/audit/:uuid`; the server page fetches `GET /api/share/:uuid`, which strips PII and returns tool-level savings data only.
 
 ## Stack justification
 
 - **Next.js + React**: keeps the UI, public share route, metadata, and Open Graph rendering in one App Router project.
-- **Express inside the Next server**: gives explicit backend route control without running a separate backend port or Python service.
+- **Native Next route handlers plus local Express**: route handlers make Vercel deployment work without a custom Node server, while Express keeps the same local one-port workflow.
 - **TypeScript + Zod**: replaces Pydantic with compile-time types plus runtime validation for untrusted JSON.
 - **Decimal.js**: keeps financial math deterministic and avoids ordinary JavaScript floating-point surprises.
 - **Drizzle + Supabase Postgres**: Drizzle provides typed persistence while Supabase Postgres provides the hosted database.
@@ -82,7 +86,7 @@ The required tables are defined in `server/db/schema.ts` and documented in `docs
 
 ## Abuse protection and email
 
-Lead capture uses a hidden honeypot field plus an in-memory IP rate limit of 5 lead submissions per hour. This is intentionally lightweight for an MVP because it blocks common bot form fills without adding hCaptcha friction before the user receives value. Transactional email uses Resend via `RESEND_API_KEY`; high-savings cases explicitly say Credex will reach out.
+Lead capture uses a hidden honeypot field plus an in-memory IP rate limit of 5 lead submissions per hour. This is intentionally lightweight for an MVP because it blocks common bot form fills without adding hCaptcha friction before the user receives value. Transactional email uses Resend via `RESEND_API_KEY` and requires `EMAIL_FROM`; high-savings cases explicitly say Credex will reach out.
 
 ## Scalability plan for 10k audits/day
 

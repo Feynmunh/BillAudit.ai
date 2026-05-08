@@ -6,7 +6,7 @@ function AuditPlaceholder() {
   return (
     <>
       <section id="audit" className="audit-section">
-        <div className="mx-auto grid max-w-[96rem] gap-12">
+        <div className="mx-auto grid max-w-[72rem] gap-8 px-0 sm:px-4">
           <div className="audit-copy-panel">
             <p className="font-mono text-xs uppercase tracking-[0.24em] text-white/55">Spend input</p>
             <h2 className="mt-5 max-w-3xl text-[clamp(3.2rem,6.4vw,6.8rem)] font-semibold leading-[0.93] tracking-[-0.07em] text-white">
@@ -22,17 +22,37 @@ function AuditPlaceholder() {
             </div>
           </div>
           <div className="audit-console" aria-busy="true">
-            <div className="audit-tabs">
-              {Array.from({ length: 8 }, (_, index) => (
-                <div key={index} className="audit-tab h-20" />
+            <div className="audit-tabs" aria-hidden="true">
+              {Array.from({ length: 4 }, (_, index) => (
+                <div key={index} className={`audit-tab ${index === 0 ? "audit-tab-active" : ""}`}>
+                  <span className="tool-logo-frame">
+                    <span className="tool-logo-image bg-black/30" />
+                  </span>
+                </div>
               ))}
+              <div className="audit-tool-picker">
+                <div className="audit-add-tool">+ Add AI tool</div>
+              </div>
             </div>
             <div className="audit-detail-panel">
-              <div className="h-28 border border-black/10 bg-[#fffde8]" />
-              <div className="grid gap-3 md:grid-cols-4">
-                {Array.from({ length: 4 }, (_, index) => (
+              <div className="audit-setup-grid">
+                {Array.from({ length: 2 }, (_, index) => (
                   <div key={index} className="h-20 border border-black/10 bg-[#fbfaf7]" />
                 ))}
+              </div>
+              <div className="tool-row">
+                <div className="flex min-w-0 items-center gap-5">
+                  <div className="h-24 w-24 border-2 border-black/10 bg-white" />
+                  <div className="grid flex-1 gap-3">
+                    <div className="h-8 border border-black/10 bg-[#fffde8]" />
+                    <div className="h-4 w-2/3 border border-black/10 bg-[#fbfaf7]" />
+                  </div>
+                </div>
+                <div className="grid gap-3 md:grid-cols-4">
+                  {Array.from({ length: 4 }, (_, index) => (
+                    <div key={index} className="h-20 border border-black/10 bg-[#fbfaf7]" />
+                  ))}
+                </div>
               </div>
             </div>
           </div>

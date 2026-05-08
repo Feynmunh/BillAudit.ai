@@ -112,7 +112,7 @@ type ToolRowProps = {
 };
 
 const ToolRow = memo(function ToolRow({ toolSpend, config, onChange }: ToolRowProps) {
-  const logoStyle = config.logoMode === "image" ? { backgroundImage: `url(${config.logoSrc})` } : { backgroundColor: config.logoColor, WebkitMaskImage: `url(${config.logoSrc})`, maskImage: `url(${config.logoSrc})` };
+  const logoStyle = { backgroundColor: config.logoColor, WebkitMaskImage: `url(${config.logoSrc})`, maskImage: `url(${config.logoSrc})` };
 
   return (
     <fieldset className="tool-row">
@@ -190,7 +190,7 @@ export function SpendInputSection({ form, toolsConfig, teamSize, useCase, status
             {activeTools.map((tool) => {
               const toolSpend = form.find((item) => item.toolId === tool.id);
               const isActive = selectedToolSpend?.toolId === tool.id;
-              const logoStyle = tool.logoMode === "image" ? { backgroundImage: `url(${tool.logoSrc})` } : { backgroundColor: tool.logoColor, WebkitMaskImage: `url(${tool.logoSrc})`, maskImage: `url(${tool.logoSrc})` };
+              const logoStyle = { backgroundColor: tool.logoColor, WebkitMaskImage: `url(${tool.logoSrc})`, maskImage: `url(${tool.logoSrc})` };
               return (
                 <button
                   key={tool.id}
@@ -214,7 +214,7 @@ export function SpendInputSection({ form, toolsConfig, teamSize, useCase, status
                 <summary className="audit-add-tool">+ Add AI tool</summary>
                 <div className="audit-tool-menu">
                   {addableTools.map((tool) => {
-                    const logoStyle = tool.logoMode === "image" ? { backgroundImage: `url(${tool.logoSrc})` } : { backgroundColor: tool.logoColor, WebkitMaskImage: `url(${tool.logoSrc})`, maskImage: `url(${tool.logoSrc})` };
+                    const logoStyle = { backgroundColor: tool.logoColor, WebkitMaskImage: `url(${tool.logoSrc})`, maskImage: `url(${tool.logoSrc})` };
                     return (
                       <button
                         key={tool.id}
