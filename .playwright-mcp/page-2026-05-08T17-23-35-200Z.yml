@@ -1,0 +1,218 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]: Instant AI spend audit · no login required · built for Credex operators
+    - navigation [ref=e4]:
+      - link "BillAudit home" [ref=e5] [cursor=pointer]:
+        - /url: "#top"
+        - img "BillAudit" [ref=e6]
+      - generic [ref=e7]:
+        - link "Audit" [ref=e8] [cursor=pointer]:
+          - /url: "#audit"
+        - link "Results" [ref=e9] [cursor=pointer]:
+          - /url: "#results"
+        - link "Share" [ref=e10] [cursor=pointer]:
+          - /url: "#lead"
+      - link "Run audit" [ref=e11] [cursor=pointer]:
+        - /url: "#audit"
+    - generic [ref=e12]:
+      - generic [ref=e13]:
+        - paragraph [ref=e14]: AI finance control plane
+        - heading "Audit your AI burn before renewal." [level=1] [ref=e15]
+        - paragraph [ref=e16]: Surface wasted spend across Cursor, Claude, ChatGPT, Gemini and API usage in under a minute.
+        - generic [ref=e17]:
+          - link "Get instant audit →" [ref=e18] [cursor=pointer]:
+            - /url: "#audit"
+          - link "See savings model →" [ref=e19] [cursor=pointer]:
+            - /url: "#results"
+      - generic [ref=e21]:
+        - generic [ref=e23]:
+          - generic [ref=e24]: YOUR AI STACK
+          - strong [ref=e25]: $18.4K/mo
+        - generic [ref=e26]:
+          - generic [ref=e27]: BILLAUDIT
+          - strong [ref=e28]: $2.8K found
+        - generic [ref=e29]:
+          - generic [ref=e30]: NEXT RENEWAL
+          - strong [ref=e31]: clean plan
+    - generic [ref=e36]:
+      - generic [ref=e37]:
+        - paragraph [ref=e38]: Operator promise
+        - paragraph [ref=e39]: No login gate before value
+      - generic [ref=e40]:
+        - paragraph [ref=e41]: Operator promise
+        - paragraph [ref=e42]: Finance-literate recommendations
+      - generic [ref=e43]:
+        - paragraph [ref=e44]: Operator promise
+        - paragraph [ref=e45]: Public audit link for sharing
+    - generic [ref=e47]:
+      - generic [ref=e48]:
+        - paragraph [ref=e49]: Spend input
+        - heading "A cleaner way to burn before renewal." [level=2] [ref=e50]
+        - paragraph [ref=e51]: Choose the tools you pay for, set team size and use case, then enter each plan, monthly spend, and seats.
+        - generic [ref=e52]:
+          - generic [ref=e53]:
+            - generic [ref=e54]: Selected
+            - strong [ref=e55]: "4"
+          - generic [ref=e56]:
+            - generic [ref=e57]: Monthly spend
+            - strong [ref=e58]: $110
+          - generic [ref=e59]:
+            - generic [ref=e60]: Autosave
+            - strong [ref=e61]: "On"
+      - generic [ref=e62]:
+        - generic "AI tools" [ref=e63]:
+          - button "Cursor" [pressed] [ref=e64]:
+            - generic [ref=e67]: Cursor
+          - button "GitHub Copilot" [ref=e68]:
+            - generic [ref=e71]: GitHub Copilot
+          - button "Claude" [ref=e72]:
+            - generic [ref=e75]: Claude
+          - button "ChatGPT" [ref=e76]:
+            - generic [ref=e79]: ChatGPT
+          - button "Anthropic API" [ref=e80]:
+            - generic [ref=e83]: Anthropic API
+          - button "OpenAI API" [ref=e84]:
+            - generic [ref=e87]: OpenAI API
+          - button "Gemini" [ref=e88]:
+            - generic [ref=e91]: Gemini
+          - button "Windsurf" [ref=e92]:
+            - generic [ref=e95]: Windsurf
+        - generic [ref=e96]:
+          - generic [ref=e97]:
+            - generic [ref=e98]:
+              - text: Team size
+              - textbox "Team size" [ref=e99]:
+                - /placeholder: "Example: 12"
+                - text: "1"
+            - generic [ref=e100]:
+              - text: Primary use case
+              - combobox "Primary use case" [ref=e101]:
+                - option "Coding"
+                - option "Writing"
+                - option "Data"
+                - option "Research"
+                - option "Mixed" [selected]
+          - group [ref=e102]:
+            - generic [ref=e103]:
+              - checkbox "Cursor Coding" [checked] [ref=e104]
+              - generic [ref=e107]:
+                - generic [ref=e108]: Cursor
+                - generic [ref=e109]: Coding
+            - generic [ref=e110]:
+              - generic [ref=e111]:
+                - text: Plan
+                - combobox "Plan" [ref=e112]:
+                  - option "Hobby"
+                  - option "Pro" [selected]
+                  - option "Business"
+                  - option "Enterprise"
+              - generic [ref=e113]:
+                - text: Monthly $
+                - textbox "Monthly $" [ref=e114]: "80"
+              - generic [ref=e115]:
+                - text: Seats
+                - textbox "Seats" [ref=e116]: "1"
+              - generic [ref=e117]:
+                - text: Billing
+                - combobox "Billing" [ref=e118]:
+                  - option "Monthly" [selected]
+                  - option "Annual"
+        - generic [ref=e119]:
+          - paragraph [ref=e120]: Draft autosaves across reloads.
+          - button "Run spend audit →" [ref=e161]
+    - generic [ref=e122]:
+      - generic [ref=e123]:
+        - generic [ref=e124]:
+          - paragraph [ref=e125]: Audit dashboard
+          - heading "Savings signal." [level=2] [ref=e126]
+        - paragraph [ref=e162]: Keep auditing API usage and seat counts as the team grows.
+      - generic [ref=e127]:
+        - generic [ref=e128]:
+          - generic [ref=e163]:
+            - paragraph [ref=e164]: Monthly savings
+            - paragraph [ref=e165]: $60
+          - generic [ref=e166]:
+            - paragraph [ref=e167]: Annual savings
+            - paragraph [ref=e168]: $720
+          - generic [ref=e169]:
+            - paragraph [ref=e170]: Tier
+            - paragraph [ref=e171]: Optimal spend
+        - paragraph [ref=e173]: "This executive summary presents findings from our AI software spend audit. Our current monthly AI tool expenditure is $110. The audit identified an optimal $60 monthly savings potential, projecting $720 in annual cost reductions. Key recommendations for achieving these efficiencies include: * **Cursor:** Migrate users to the Pro tier, realizing $60/month in savings. * **GitHub Copilot:** Transition to the Business tier for $0/month additional savings, optimizing licensing. * **Claude:** Utilize the Pro tier for $0/month in further savings, ensuring appropriate feature access. This strategy focuses on precise tier alignment and cost optimization, ensuring efficient resource allocation across our AI tool ecosystem."
+        - generic [ref=e174]:
+          - article [ref=e175]:
+            - generic [ref=e176]:
+              - paragraph [ref=e177]: Pro → Pro
+              - heading "cursor" [level=3] [ref=e178]
+            - paragraph [ref=e179]: Current spend is $80/mo for 1 seat(s). A Pro plan is a defensible baseline at $20/mo before usage-specific add-ons.
+            - generic [ref=e180]:
+              - paragraph [ref=e181]: Save/mo
+              - paragraph [ref=e182]: $60
+          - article [ref=e183]:
+            - generic [ref=e184]:
+              - paragraph [ref=e185]: Business → Business
+              - heading "github copilot" [level=3] [ref=e186]
+            - paragraph [ref=e187]: Current Business spend is aligned with published pricing for 1 seat(s) or usage-based billing.
+            - list [ref=e188]:
+              - listitem [ref=e189]: "Flag: Seat check: team size under 3 on a team or enterprise tier; review downgrade options before renewal."
+            - generic [ref=e190]:
+              - paragraph [ref=e191]: Save/mo
+              - paragraph [ref=e192]: $0
+          - article [ref=e193]:
+            - generic [ref=e194]:
+              - paragraph [ref=e195]: Pro → Pro
+              - heading "claude" [level=3] [ref=e196]
+            - paragraph [ref=e197]: Current Pro spend is aligned with published pricing for 1 seat(s) or usage-based billing.
+            - generic [ref=e198]:
+              - paragraph [ref=e199]: Save/mo
+              - paragraph [ref=e200]: $0
+          - article [ref=e201]:
+            - generic [ref=e202]:
+              - paragraph [ref=e203]: Team → Team
+              - heading "chatgpt" [level=3] [ref=e204]
+            - paragraph [ref=e205]: Current Team spend is aligned with published pricing for 1 seat(s) or usage-based billing.
+            - list [ref=e206]:
+              - listitem [ref=e207]: "Flag: Seat check: team size under 3 on a team or enterprise tier; review downgrade options before renewal."
+            - generic [ref=e208]:
+              - paragraph [ref=e209]: Save/mo
+              - paragraph [ref=e210]: $0
+    - generic [ref=e131]:
+      - generic [ref=e132]:
+        - paragraph [ref=e133]: AI follow-up
+        - heading "Claim the clean version." [level=2] [ref=e134]
+        - paragraph [ref=e135]: Drop an email. Gemini writes the internal Credex brief, sends your confirmation, and unlocks a PII-safe public snapshot.
+        - generic [ref=e211]:
+          - generic [ref=e212]:
+            - generic [ref=e213]: AI brief
+            - strong [ref=e214]: Auto-generated
+          - generic [ref=e215]:
+            - generic [ref=e216]: Public URL
+            - strong [ref=e217]: PII stripped
+          - generic [ref=e218]:
+            - generic [ref=e219]: Credex reach-out
+            - strong [ref=e220]: High-savings cases
+      - form "AI follow-up details" [ref=e136]:
+        - generic [ref=e137]:
+          - generic [ref=e138]:
+            - generic [ref=e139]: 1. Email address
+            - generic [ref=e140]: required
+          - textbox "1. Email address required" [ref=e141]:
+            - /placeholder: you@company.com
+        - generic [ref=e142]:
+          - generic [ref=e143]:
+            - generic [ref=e144]: 2. Company name
+            - generic [ref=e145]: optional
+          - textbox "2. Company name optional" [ref=e146]:
+            - /placeholder: Acme AI Ops
+        - generic [ref=e147]:
+          - generic [ref=e148]:
+            - generic [ref=e149]: 3. Your role
+            - generic [ref=e150]: optional
+          - textbox "3. Your role optional" [ref=e151]:
+            - /placeholder: Founder, Finance, Ops
+        - generic [ref=e152]:
+          - generic [ref=e153]:
+            - generic [ref=e154]: 4. Team size
+            - generic [ref=e155]: optional
+          - spinbutton "4. Team size optional" [ref=e156]: "1"
+        - button "Email me the audit →" [ref=e221]
+  - alert [ref=e158]

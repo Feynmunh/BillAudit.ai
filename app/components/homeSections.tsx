@@ -88,18 +88,18 @@ type AuditSidebarProps = {
 
 function AuditSidebar({ selectedCount, declaredSpend }: AuditSidebarProps) {
   return (
-    <div className="lg:sticky lg:top-8 lg:self-start">
-      <p className="font-mono text-xs uppercase tracking-[0.24em] text-black/45">Spend input</p>
-      <h2 className="mt-4 max-w-xl text-4xl font-semibold leading-[0.98] tracking-[-0.04em] lg:text-6xl">
-        A cleaner way to map AI spend.
+    <div className="audit-copy-panel">
+      <p className="font-mono text-xs uppercase tracking-[0.24em] text-white/55">Spend input</p>
+      <h2 className="mt-5 max-w-3xl text-[clamp(3.2rem,6.4vw,6.8rem)] font-semibold leading-[0.93] tracking-[-0.07em] text-white">
+        A cleaner way to burn before renewal.
       </h2>
-      <p className="mt-5 max-w-md text-lg leading-relaxed text-black/60">
+      <p className="mt-7 max-w-2xl text-xl leading-[1.35] text-white/65 lg:text-2xl">
         Choose the tools you pay for, set team size and use case, then enter each plan, monthly spend, and seats.
       </p>
-      <div className="mt-8 grid gap-3 font-mono text-xs uppercase tracking-[0.12em]">
-        <div className="metric-row"><span>Selected</span><strong>{selectedCount}</strong></div>
-        <div className="metric-row"><span>Monthly spend</span><strong>{currency(declaredSpend)}</strong></div>
-        <div className="metric-row"><span>Autosave</span><strong>On</strong></div>
+      <div className="audit-metric-stack">
+        <div className="audit-metric-row"><span>Selected</span><strong>{selectedCount}</strong></div>
+        <div className="audit-metric-row"><span>Monthly spend</span><strong>{currency(declaredSpend)}</strong></div>
+        <div className="audit-metric-row"><span>Autosave</span><strong>On</strong></div>
       </div>
     </div>
   );
@@ -112,17 +112,22 @@ type ToolRowProps = {
 };
 
 const ToolRow = memo(function ToolRow({ toolSpend, config, onChange }: ToolRowProps) {
+  const logoStyle = config.logoMode === "image" ? { backgroundImage: `url(${config.logoSrc})` } : { backgroundColor: config.logoColor, WebkitMaskImage: `url(${config.logoSrc})`, maskImage: `url(${config.logoSrc})` };
+
   return (
     <fieldset className="tool-row">
-      <label className="flex min-w-0 items-center gap-3">
+      <label className="tool-identity">
         <input
           type="checkbox"
           className="h-4 w-4 accent-black"
           checked={toolSpend.enabled}
           onChange={(event) => onChange({ enabled: event.target.checked })}
         />
+        <span className="tool-logo-frame tool-logo-frame-large">
+          <span className="tool-logo-image" style={logoStyle} />
+        </span>
         <span className="grid min-w-0 gap-1">
-          <span className="truncate text-xl font-medium tracking-tight" style={{ color: config.accent }}>{config.name}</span>
+          <span className="truncate text-2xl font-semibold tracking-[-0.04em] text-black lg:text-3xl">{config.name}</span>
           <span className="font-mono text-[0.68rem] uppercase tracking-[0.2em] text-black/38">{config.category}</span>
         </span>
       </label>
@@ -162,20 +167,75 @@ type SpendFormProps = {
   message: string;
   selectedCount: number;
   declaredSpend: number;
+  selectedToolId: string;
+  onSelectToolAction: (toolId: string) => void;
   onTeamSizeChangeAction: (value: string) => void;
   onUseCaseChangeAction: (value: UseCase) => void;
   onUpdateToolAction: (toolId: string, next: Partial<ToolSpend>) => void;
   onRunAuditAction: FormSubmitHandler;
 };
 
-export function SpendInputSection({ form, toolsConfig, teamSize, useCase, status, message, selectedCount, declaredSpend, onTeamSizeChangeAction, onUseCaseChangeAction, onUpdateToolAction, onRunAuditAction }: SpendFormProps) {
+export function SpendInputSection({ form, toolsConfig, teamSize, useCase, status, message, selectedCount, declaredSpend, selectedToolId, onSelectToolAction, onTeamSizeChangeAction, onUseCaseChangeAction, onUpdateToolAction, onRunAuditAction }: SpendFormProps) {
+  const selectedToolSpend = form.find((tool) => tool.toolId === selectedToolId) ?? form[0];
+  const selectedConfig = selectedToolSpend ? toolsConfig.find((tool) => tool.id === selectedToolSpend.toolId) : undefined;
+  const activeTools = toolsConfig.filter((tool) => tool.id === selectedToolSpend?.toolId || form.some((item) => item.toolId === tool.id && item.enabled));
+  const addableTools = toolsConfig.filter((tool) => !activeTools.some((activeTool) => activeTool.id === tool.id));
+
   return (
-    <section id="audit" className="bg-[#f8f7f2] px-5 py-14 lg:px-10 lg:py-20">
-      <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.78fr_1.22fr]">
+    <section id="audit" className="audit-section">
+      <div className="mx-auto grid max-w-[72rem] gap-8 px-0 sm:px-4">
         <AuditSidebar selectedCount={selectedCount} declaredSpend={declaredSpend} />
-        <form onSubmit={onRunAuditAction} className="border border-black/10 bg-white p-4 shadow-[0_30px_80px_rgb(0_0_0/0.08)] lg:p-5">
-          <div className="grid gap-3">
-            <div className="grid gap-3 bg-[#f8f7f2] p-4 md:grid-cols-[0.85fr_1.15fr]">
+        <form onSubmit={onRunAuditAction} className="audit-console">
+          <div className="audit-tabs" aria-label="AI tools">
+            {activeTools.map((tool) => {
+              const toolSpend = form.find((item) => item.toolId === tool.id);
+              const isActive = selectedToolSpend?.toolId === tool.id;
+              const logoStyle = tool.logoMode === "image" ? { backgroundImage: `url(${tool.logoSrc})` } : { backgroundColor: tool.logoColor, WebkitMaskImage: `url(${tool.logoSrc})`, maskImage: `url(${tool.logoSrc})` };
+              return (
+                <button
+                  key={tool.id}
+                  type="button"
+                  aria-pressed={isActive}
+                  className={`audit-tab ${isActive ? "audit-tab-active" : ""}`}
+                  onClick={() => {
+                    onSelectToolAction(tool.id);
+                    if (toolSpend && !toolSpend.enabled) {
+                      onUpdateToolAction(tool.id, { enabled: true });
+                    }
+                  }}
+                >
+                  <span className="tool-logo-frame"><span className="tool-logo-image" style={logoStyle} /></span>
+                  <span className="sr-only">{tool.name}</span>
+                </button>
+              );
+            })}
+            {addableTools.length > 0 && (
+              <details className="audit-tool-picker">
+                <summary className="audit-add-tool">+ Add AI tool</summary>
+                <div className="audit-tool-menu">
+                  {addableTools.map((tool) => {
+                    const logoStyle = tool.logoMode === "image" ? { backgroundImage: `url(${tool.logoSrc})` } : { backgroundColor: tool.logoColor, WebkitMaskImage: `url(${tool.logoSrc})`, maskImage: `url(${tool.logoSrc})` };
+                    return (
+                      <button
+                        key={tool.id}
+                        type="button"
+                        className="audit-tool-menu-item"
+                        onClick={() => {
+                          onSelectToolAction(tool.id);
+                          onUpdateToolAction(tool.id, { enabled: true });
+                        }}
+                      >
+                        <span className="tool-logo-frame"><span className="tool-logo-image" style={logoStyle} /></span>
+                        <span>{tool.name}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </details>
+            )}
+          </div>
+          <div className="audit-detail-panel">
+            <div className="audit-setup-grid">
               <label className="field-label">
                 Team size
                 <input inputMode="numeric" value={teamSize} onChange={(event) => onTeamSizeChangeAction(event.target.value)} className="field-input" placeholder="Example: 12" />
@@ -187,15 +247,11 @@ export function SpendInputSection({ form, toolsConfig, teamSize, useCase, status
                 </select>
               </label>
             </div>
-            {form.map((toolSpend) => {
-              const config = toolsConfig.find((tool) => tool.id === toolSpend.toolId);
-              if (!config) {
-                return null;
-              }
-              return <ToolRow key={toolSpend.toolId} toolSpend={toolSpend} config={config} onChange={(next) => onUpdateToolAction(toolSpend.toolId, next)} />;
-            })}
+            {selectedToolSpend && selectedConfig && (
+              <ToolRow toolSpend={selectedToolSpend} config={selectedConfig} onChange={(next) => onUpdateToolAction(selectedToolSpend.toolId, next)} />
+            )}
           </div>
-          <div className="mt-5 flex flex-col gap-4 bg-[#f8f7f2] p-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="audit-action-row">
             <p className="font-mono text-xs uppercase tracking-[0.14em] text-black/48">Draft autosaves across reloads.</p>
             <button type="submit" className="button-primary" disabled={status === "loading"}>
               {status === "loading" ? "Auditing..." : "Run spend audit →"}

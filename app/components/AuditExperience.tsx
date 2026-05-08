@@ -30,6 +30,7 @@ export function AuditExperience() {
   const [website, setWebsite] = useState("");
   const [teamSize, setTeamSize] = useState("1");
   const [useCase, setUseCase] = useState<UseCase>("mixed");
+  const [selectedToolId, setSelectedToolId] = useState("cursor");
   const [status, setStatus] = useState<"idle" | "loading" | "error" | "sent">("idle");
   const [message, setMessage] = useState("");
   const formLoaded = useRef(false);
@@ -182,6 +183,8 @@ export function AuditExperience() {
         message={message}
         selectedCount={selectedCount}
         declaredSpend={declaredSpend}
+        selectedToolId={selectedToolId}
+        onSelectToolAction={setSelectedToolId}
         onTeamSizeChangeAction={setTeamSize}
         onUseCaseChangeAction={setUseCase}
         onUpdateToolAction={updateTool}

@@ -1,0 +1,156 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]: Instant AI spend audit · no login required · built for Credex operators
+    - navigation [ref=e4]:
+      - link "BillAudit home" [ref=e5] [cursor=pointer]:
+        - /url: "#top"
+        - img "BillAudit" [ref=e6]
+      - link "Run audit" [ref=e11] [cursor=pointer]:
+        - /url: "#audit"
+    - generic [ref=e12]:
+      - generic [ref=e13]:
+        - paragraph [ref=e14]: AI finance control plane
+        - heading "Audit your AI burn before renewal." [level=1] [ref=e15]
+        - paragraph [ref=e16]: Surface wasted spend across Cursor, Claude, ChatGPT, Gemini and API usage in under a minute.
+        - generic [ref=e17]:
+          - link "Get instant audit →" [ref=e18] [cursor=pointer]:
+            - /url: "#audit"
+          - link "See savings model →" [ref=e19] [cursor=pointer]:
+            - /url: "#results"
+      - generic [ref=e21]:
+        - generic [ref=e23]:
+          - generic [ref=e24]: YOUR AI STACK
+          - strong [ref=e25]: $18.4K/mo
+        - generic [ref=e26]:
+          - generic [ref=e27]: BILLAUDIT
+          - strong [ref=e28]: $2.8K found
+        - generic [ref=e29]:
+          - generic [ref=e30]: NEXT RENEWAL
+          - strong [ref=e31]: clean plan
+    - generic [ref=e36]:
+      - generic [ref=e37]:
+        - paragraph [ref=e38]: Operator promise
+        - paragraph [ref=e39]: No login gate before value
+      - generic [ref=e40]:
+        - paragraph [ref=e41]: Operator promise
+        - paragraph [ref=e42]: Finance-literate recommendations
+      - generic [ref=e43]:
+        - paragraph [ref=e44]: Operator promise
+        - paragraph [ref=e45]: Public audit link for sharing
+    - generic [ref=e47]:
+      - generic [ref=e48]:
+        - paragraph [ref=e49]: Spend input
+        - heading "A cleaner way to burn before renewal." [level=2] [ref=e50]
+        - paragraph [ref=e51]: Choose the tools you pay for, set team size and use case, then enter each plan, monthly spend, and seats.
+        - generic [ref=e52]:
+          - generic [ref=e53]:
+            - generic [ref=e54]: Selected
+            - strong [ref=e55]: "4"
+          - generic [ref=e56]:
+            - generic [ref=e57]: Monthly spend
+            - strong [ref=e58]: $110
+          - generic [ref=e59]:
+            - generic [ref=e60]: Autosave
+            - strong [ref=e61]: "On"
+      - generic [ref=e62]:
+        - generic "AI tools" [ref=e63]:
+          - button "Cursor" [pressed] [ref=e64]:
+            - generic [ref=e67]: Cursor
+          - button "GitHub Copilot" [ref=e137]:
+            - generic [ref=e140]: GitHub Copilot
+          - button "Claude" [ref=e141]:
+            - generic [ref=e144]: Claude
+          - button "ChatGPT" [ref=e68]:
+            - generic [ref=e71]: ChatGPT
+          - group [ref=e72]:
+            - generic "+ Add AI tool" [ref=e73] [cursor=pointer]
+            - generic [ref=e145]:
+              - button "Anthropic API" [ref=e146]:
+                - generic [ref=e149]: Anthropic API
+              - button "OpenAI API" [ref=e150]:
+                - generic [ref=e153]: OpenAI API
+              - button "Gemini" [ref=e154]:
+                - generic [ref=e157]: Gemini
+              - button "Windsurf" [ref=e158]:
+                - generic [ref=e161]: Windsurf
+        - generic [ref=e74]:
+          - generic [ref=e75]:
+            - generic [ref=e76]:
+              - text: Team size
+              - textbox "Team size" [ref=e77]:
+                - /placeholder: "Example: 12"
+                - text: "1"
+            - generic [ref=e78]:
+              - text: Primary use case
+              - combobox "Primary use case" [ref=e79]:
+                - option "Coding"
+                - option "Writing"
+                - option "Data"
+                - option "Research"
+                - option "Mixed" [selected]
+          - group [ref=e80]:
+            - generic [ref=e81]:
+              - checkbox "Cursor Coding" [checked] [ref=e82]
+              - generic [ref=e85]:
+                - generic [ref=e86]: Cursor
+                - generic [ref=e87]: Coding
+            - generic [ref=e88]:
+              - generic [ref=e89]:
+                - text: Plan
+                - combobox "Plan" [ref=e90]:
+                  - option "Hobby"
+                  - option "Pro" [selected]
+                  - option "Business"
+                  - option "Enterprise"
+              - generic [ref=e91]:
+                - text: Monthly $
+                - textbox "Monthly $" [ref=e92]: "80"
+              - generic [ref=e93]:
+                - text: Seats
+                - textbox "Seats" [ref=e94]: "1"
+              - generic [ref=e95]:
+                - text: Billing
+                - combobox "Billing" [ref=e96]:
+                  - option "Monthly" [selected]
+                  - option "Annual"
+        - generic [ref=e97]:
+          - paragraph [ref=e98]: Draft autosaves across reloads.
+          - button "Auditing..." [disabled] [ref=e162]
+    - generic [ref=e100]:
+      - generic [ref=e102]:
+        - paragraph [ref=e103]: Audit dashboard
+        - heading "Savings signal." [level=2] [ref=e104]
+      - generic [ref=e106]:
+        - paragraph [ref=e107]: Waiting for input
+        - paragraph [ref=e108]: Run the audit to reveal savings.
+    - generic [ref=e109]:
+      - generic [ref=e110]:
+        - paragraph [ref=e111]: AI follow-up
+        - heading "Claim the clean version." [level=2] [ref=e112]
+        - paragraph [ref=e113]: Drop an email. Gemini writes the internal Credex brief, sends your confirmation, and unlocks a PII-safe public snapshot.
+      - form "AI follow-up details" [ref=e114]:
+        - generic [ref=e115]:
+          - generic [ref=e116]:
+            - generic [ref=e117]: 1. Email address
+            - generic [ref=e118]: required
+          - textbox "1. Email address required" [ref=e119]:
+            - /placeholder: you@company.com
+        - generic [ref=e120]:
+          - generic [ref=e121]:
+            - generic [ref=e122]: 2. Company name
+            - generic [ref=e123]: optional
+          - textbox "2. Company name optional" [ref=e124]:
+            - /placeholder: Acme AI Ops
+        - generic [ref=e125]:
+          - generic [ref=e126]:
+            - generic [ref=e127]: 3. Your role
+            - generic [ref=e128]: optional
+          - textbox "3. Your role optional" [ref=e129]:
+            - /placeholder: Founder, Finance, Ops
+        - generic [ref=e130]:
+          - generic [ref=e131]:
+            - generic [ref=e132]: 4. Team size
+            - generic [ref=e133]: optional
+          - spinbutton "4. Team size optional" [ref=e134]: "1"
+        - button "Writing brief..." [disabled] [ref=e163]
+  - alert [ref=e136]

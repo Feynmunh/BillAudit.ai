@@ -10,6 +10,9 @@ export type ToolConfig = {
   name: string;
   category: string;
   accent: string;
+  logoSrc: string;
+  logoColor: string;
+  logoMode?: "image" | "mask";
   defaultPlan: string;
   plans: string[];
 };
@@ -42,14 +45,13 @@ export const useCaseOptions: Array<{ value: UseCase; label: string }> = [
 ];
 
 export const tools: ToolConfig[] = [
-  { id: "cursor", name: "Cursor", category: "Coding", accent: "#19e272", defaultPlan: "Pro", plans: ["Hobby", "Pro", "Business", "Enterprise"] },
-  { id: "github_copilot", name: "GitHub Copilot", category: "Coding", accent: "#7c3cff", defaultPlan: "Business", plans: ["Individual", "Business", "Enterprise"] },
-  { id: "claude", name: "Claude", category: "Chat", accent: "#ff6b2b", defaultPlan: "Pro", plans: ["Free", "Pro", "Max", "Team", "Enterprise", "API direct"] },
-  { id: "chatgpt", name: "ChatGPT", category: "Chat", accent: "#0ea5e9", defaultPlan: "Team", plans: ["Plus", "Team", "Enterprise", "API direct"] },
-  { id: "anthropic_api", name: "Anthropic API", category: "API", accent: "#ff8bd2", defaultPlan: "API direct", plans: ["API direct"] },
-  { id: "openai_api", name: "OpenAI API", category: "API", accent: "#f97316", defaultPlan: "API direct", plans: ["API direct"] },
-  { id: "gemini", name: "Gemini", category: "Chat", accent: "#f6d743", defaultPlan: "Pro", plans: ["Pro", "Ultra", "API"] },
-  { id: "windsurf", name: "Windsurf", category: "Coding", accent: "#10b981", defaultPlan: "Pro", plans: ["Pro", "Teams", "Enterprise"] },
+  { id: "cursor", name: "Cursor", category: "Coding", accent: "#19e272", logoSrc: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/cursor.svg", logoColor: "#111111", defaultPlan: "Pro", plans: ["Hobby", "Pro", "Business", "Enterprise"] },
+  { id: "github_copilot", name: "GitHub Copilot", category: "Coding", accent: "#7c3cff", logoSrc: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/githubcopilot.svg", logoColor: "#111111", defaultPlan: "Business", plans: ["Individual", "Business", "Enterprise"] },
+  { id: "claude", name: "Claude", category: "Chat", accent: "#ff6b2b", logoSrc: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/claude.svg", logoColor: "#d97757", defaultPlan: "Pro", plans: ["Free", "Pro", "Max", "Team", "Enterprise", "API direct"] },
+  { id: "chatgpt", name: "ChatGPT", category: "Chat", accent: "#0ea5e9", logoSrc: "https://chatgpt.com/favicon.ico", logoColor: "#10a37f", logoMode: "image", defaultPlan: "Team", plans: ["Plus", "Team", "Enterprise", "API direct"] },
+  { id: "anthropic_api", name: "Anthropic API", category: "API", accent: "#ff8bd2", logoSrc: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/anthropic.svg", logoColor: "#191919", defaultPlan: "API direct", plans: ["API direct"] },
+  { id: "gemini", name: "Gemini", category: "Chat", accent: "#f6d743", logoSrc: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/googlegemini.svg", logoColor: "#4285f4", defaultPlan: "Pro", plans: ["Pro", "Ultra", "API"] },
+  { id: "windsurf", name: "Windsurf", category: "Coding", accent: "#10b981", logoSrc: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/windsurf.svg", logoColor: "#111111", defaultPlan: "Pro", plans: ["Pro", "Teams", "Enterprise"] },
 ];
 
 export const emptyForm: ToolSpend[] = tools.map((tool) => ({
