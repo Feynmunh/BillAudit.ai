@@ -108,6 +108,23 @@ export class AuditEngine {
 
   getPublicView(result: AuditResult): PublicAuditView {
     const savingsPct = result.total_monthly_spend > 0 ? roundPercent(new Decimal(result.total_monthly_savings).dividedBy(result.total_monthly_spend).times(100)) : 0;
-    return { audit_id: result.audit_id, savings_level: result.savings_level, total_monthly_savings: result.total_monthly_savings, total_annual_savings: result.total_annual_savings, savings_percentage: Math.min(savingsPct, 99.9), created_at: result.created_at, tool_count: result.tool_recommendations.length };
+    return {
+      audit_id: result.audit_id,
+      savings_level: result.savings_level,
+      total_monthly_savings: result.total_monthly_savings,
+      total_annual_savings: result.total_annual_savings,
+      savings_percentage: Math.min(savingsPct, 99.9),
+      created_at: result.created_at,
+      tool_count: result.tool_recommendations.length,
+      tools: result.tool_recommendations.map((recommendation) => ({
+        tool_id: recommendation.tool_id,
+        current_plan: recommendation.current_plan,
+        recommended_plan: recommendation.recommended_plan,
+        monthly_savings: recommendation.monthly_savings,
+        annual_savings: recommendation.annual_savings,
+        savings_percentage: recommendation.savings_percentage,
+        flags: recommendation.flags,
+      })),
+    };
   }
 }

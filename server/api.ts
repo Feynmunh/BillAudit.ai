@@ -2,10 +2,24 @@ import express, { type ErrorRequestHandler, type RequestHandler } from "express"
 import { ZodError } from "zod";
 
 import { AuditEngine } from "./auditEngine.js";
+import { sendAuditConfirmationEmail } from "./emailService.js";
 import { auditRequestSchema, leadSchema } from "./models.js";
 import { getPricingDatabase } from "./pricingData.js";
 import { AuditStore } from "./storage.js";
-import { generatePersonalizedSummary } from "./summaryService.js";
+import { generateLeadBrief, generatePersonalizedSummary } from "./summaryService.js";
+
+const leadRateLimit = new Map<string, { count: number; resetAt: number }>();
+
+function isLeadRateLimited(key: string): boolean {
+  const now = Date.now();
+  const current = leadRateLimit.get(key);
+  if (!current || current.resetAt < now) {
+    leadRateLimit.set(key, { count: 1, resetAt: now + 60 * 60 * 1000 });
+    return false;
+  }
+  current.count += 1;
+  return current.count > 5;
+}
 
 export function createApiRouter(): express.Router {
   const router = express.Router();
@@ -75,13 +89,35 @@ export function createApiRouter(): express.Router {
 
   router.post("/api/lead", async (request, response, next) => {
     try {
+      const honeypot = typeof request.body?.website === "string" ? request.body.website.trim() : "";
+      if (honeypot) {
+        response.json({ success: true, message: "Lead captured" });
+        return;
+      }
+      const rateLimitKey = request.ip ?? request.socket.remoteAddress ?? "unknown";
+      if (isLeadRateLimited(rateLimitKey)) {
+        response.status(429).json({ success: false, error: "Too many lead requests. Try again later." });
+        return;
+      }
       const parsed = leadSchema.safeParse({ ...request.body, created_at: new Date().toISOString() });
       if (!parsed.success) {
         response.status(400).json({ success: false, error: parsed.error.issues.map((issue) => issue.message).join("; ") });
         return;
       }
-      await auditStore.saveLead(parsed.data);
-      response.json({ success: true, message: "Lead captured" });
+      const audit = await auditStore.getAudit(parsed.data.audit_id);
+      if (!audit) {
+        response.status(404).json({ success: false, error: "Audit not found" });
+        return;
+      }
+      const enrichedLead = {
+        ...parsed.data,
+        contact_priority: audit.savings_level === "high" ? "high_savings" as const : "standard" as const,
+        lead_summary: await generateLeadBrief(audit, parsed.data),
+      };
+      await auditStore.saveLead(enrichedLead);
+      const origin = typeof request.headers.origin === "string" ? request.headers.origin : `${request.protocol}://${request.get("host")}`;
+      const email_status = await sendAuditConfirmationEmail(enrichedLead, audit, `${origin}/audit/${audit.audit_id}`);
+      response.json({ success: true, message: "Lead captured", email_status, public_url: `/audit/${audit.audit_id}` });
     } catch (error) {
       next(error);
     }

@@ -9,6 +9,15 @@ type PublicAuditView = {
   savings_percentage: number;
   created_at: string;
   tool_count: number;
+  tools: Array<{
+    tool_id: string;
+    current_plan: string;
+    recommended_plan: string;
+    monthly_savings: number;
+    annual_savings: number;
+    savings_percentage: number;
+    flags: string[];
+  }>;
 };
 
 type PageParams = {
@@ -56,6 +65,11 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
       description,
       type: "article",
     },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
   };
 }
 
@@ -75,7 +89,7 @@ export default async function AuditPage({ params }: PageParams) {
           {audit ? (
             <div className="mt-8 grid gap-8">
               <h1 className="text-6xl font-black leading-[0.88] tracking-[-0.06em] lg:text-8xl">
-                This team can save {money(audit.total_monthly_savings)} per month on AI spend.
+                {money(audit.total_monthly_savings)}/mo found in this AI stack.
               </h1>
               <div className="grid gap-4 md:grid-cols-3">
                 <div className="result-card">
@@ -90,6 +104,25 @@ export default async function AuditPage({ params }: PageParams) {
                   <p className="font-mono text-xs uppercase tracking-[0.25em] text-black/45">Tools audited</p>
                   <p className="mt-4 text-5xl font-black">{audit.tool_count}</p>
                 </div>
+              </div>
+              <div className="grid gap-3">
+                {audit.tools.map((tool) => (
+                  <article key={tool.tool_id} className="grid gap-4 border border-black/10 bg-[#f7f5ee] p-5 md:grid-cols-[0.5fr_0.8fr_0.4fr]">
+                    <div>
+                      <p className="font-mono text-xs uppercase tracking-[0.25em] text-black/45">Tool</p>
+                      <h2 className="mt-2 text-3xl font-black capitalize tracking-tight">{tool.tool_id.replaceAll("_", " ")}</h2>
+                    </div>
+                    <p className="text-xl text-black/65">{tool.current_plan} → {tool.recommended_plan}</p>
+                    <div className="md:text-right">
+                      <p className="font-mono text-xs uppercase tracking-[0.25em] text-black/45">Save/mo</p>
+                      <p className="text-3xl font-black text-[#13b95a]">{money(tool.monthly_savings)}</p>
+                    </div>
+                  </article>
+                ))}
+              </div>
+              <div className="border border-black bg-[#17e86f] p-6 text-black">
+                <p className="font-mono text-xs uppercase tracking-[0.25em]">Share loop</p>
+                <p className="mt-3 text-3xl font-black tracking-tight">No email. No company. Just tools, savings, and the benchmark.</p>
               </div>
             </div>
           ) : (

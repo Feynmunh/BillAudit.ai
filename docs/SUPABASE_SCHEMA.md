@@ -1,22 +1,24 @@
-# Supabase schema
+# Supabase Postgres schema
 
-BillAudit uses Supabase as the database provider. The Express backend writes audits and leads with a server-only key from `SUPABASE_SECRET_KEY` or `SUPABASE_SERVICE_ROLE_KEY`.
+BillAudit uses Supabase Postgres through Drizzle ORM. The Express backend writes audits and leads with a server-only Postgres connection string.
 
 ## Required environment variables
 
 ```bash
-SUPABASE_URL=
-# or NEXT_PUBLIC_SUPABASE_URL= for the project URL only
-SUPABASE_SECRET_KEY=
-# or
-SUPABASE_SERVICE_ROLE_KEY=
+DATABASE_URL=postgresql://...
 ```
 
-Do not expose `SUPABASE_SECRET_KEY` or `SUPABASE_SERVICE_ROLE_KEY` to browser code.
+Do not expose `DATABASE_URL` to browser code.
 
 ## Tables
 
-Run this SQL in the Supabase SQL editor:
+The canonical Drizzle schema lives in `server/db/schema.ts`. You can apply it with:
+
+```bash
+npm run db:push
+```
+
+Equivalent SQL:
 
 ```sql
 create table if not exists public.audits (
@@ -38,6 +40,8 @@ create table if not exists public.leads (
   role text,
   team_size integer,
   audit_id uuid not null references public.audits (audit_id) on delete cascade,
+  lead_summary text,
+  contact_priority text not null default 'standard',
   created_at timestamptz not null default now()
 );
 
@@ -45,6 +49,6 @@ create index if not exists leads_audit_id_idx on public.leads (audit_id);
 create index if not exists leads_created_at_idx on public.leads (created_at desc);
 ```
 
-## RLS note
+## Access note
 
-The current server uses a server-only secret/service role key, so API writes do not depend on browser-side Row Level Security policies. If you later expose Supabase directly to the browser, add explicit RLS policies first.
+The current server connects directly to Postgres with a server-only connection string. If you later expose Supabase directly to the browser, add explicit RLS policies first.

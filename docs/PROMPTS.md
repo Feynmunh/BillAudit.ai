@@ -31,6 +31,10 @@ If `GEMINI_API_KEY` and `GOOGLE_API_KEY` are missing, the app returns the determ
 AI summary fallback used because the LLM request failed: <ErrorName>.
 ```
 
+## Internal lead brief prompt
+
+After lead capture, the backend asks Gemini for a 45-word internal Credex brief using only the optional company, role, team size, savings totals, and savings level. The output is stored in `leads.lead_summary` and is never shown on the public audit URL.
+
 ## Failed iterations
 
 1. **Generic marketing summary**

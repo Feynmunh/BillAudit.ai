@@ -4,8 +4,7 @@
 
 ```bash
 npm install
-export SUPABASE_URL="<project-url>"
-export SUPABASE_SERVICE_ROLE_KEY="<service-role-key>"
+export DATABASE_URL="postgresql://..."
 npm run test
 npm run lint
 npm run build
@@ -50,12 +49,13 @@ Manual same-port QA was run against `http://127.0.0.1:3000`:
 - `GET /` rendered the React homepage.
 - `GET /api/health` returned API health JSON.
 - `POST /api/audit/calculate` returned a successful audit with $480/month savings for the Cursor overspend sample.
+- `POST /api/lead` stores optional company, role, team size, and a Gemini lead brief; email sends when `RESEND_API_KEY` is configured.
 - `GET /api/share/:auditId` returned the PII-safe public JSON.
 - `GET /audit/:uuid` rendered the Next public audit page.
 
 ## Remaining test gaps
 
 - Add Playwright tests for the full browser audit and lead-capture flow.
-- Add Supabase integration tests with a disposable test project.
+- Add Drizzle/Postgres integration tests with a disposable test project.
 - Add summary-service tests for Gemini success, missing key, and failure fallback.
-- Add rate-limit/security tests once rate limiting is implemented.
+- Add explicit rate-limit and honeypot tests around `/api/lead`.

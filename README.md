@@ -1,6 +1,6 @@
 # BillAudit.ai
 
-BillAudit.ai is a full-stack Next.js application for auditing AI-tool spend before renewal. The React frontend collects spend inputs and renders instant savings, while the Express backend runs on the same Next server under `/api/*` for audit execution, lead capture, share data, Supabase persistence, and optional Gemini summaries.
+BillAudit.ai is a full-stack Next.js application for auditing AI-tool spend before renewal. The React frontend collects spend inputs and renders instant savings, while the Express backend runs on the same Next server under `/api/*` for audit execution, lead capture, share data, Drizzle/Postgres persistence, and optional Gemini summaries.
 
 ## Screenshots / video
 
@@ -26,19 +26,18 @@ npm run build  # Next build + Express TypeScript check
 npm run start  # production-mode unified Next + Express server
 ```
 
-Required environment variables for persistence and optional Gemini summaries:
+Required environment variables for persistence, Gemini summaries, and optional transactional email:
 
 ```bash
-SUPABASE_URL=
-# or NEXT_PUBLIC_SUPABASE_URL= for the project URL only
-SUPABASE_SECRET_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
+DATABASE_URL=postgresql://...
 GEMINI_API_KEY=
 GEMINI_MODEL=gemini-2.5-flash
+RESEND_API_KEY=
+EMAIL_FROM=BillAudit <onboarding@resend.dev>
 PORT=3000
 ```
 
-Supabase is the database provider and is required for audit and lead persistence. Set either `SUPABASE_SECRET_KEY` or `SUPABASE_SERVICE_ROLE_KEY`; do not expose those values to the browser. If Gemini keys are missing or fail, the app returns the deterministic fallback summary.
+`DATABASE_URL` should be a server-only Supabase Postgres connection string. Drizzle ORM manages the `audits` and `leads` schema. Gemini powers audit summaries and internal lead briefs. `RESEND_API_KEY` sends audit confirmation emails; when missing, lead capture still stores the lead and returns `email_status: "skipped"` for local development.
 
 ## Decisions
 
@@ -46,11 +45,11 @@ Supabase is the database provider and is required for audit and lead persistence
 2. **Express API namespaced under `/api/*`**: Express originally shadowed `/` and `/share/:auditId`; the final architecture lets Next own pages while Express owns API endpoints. This avoids route conflicts while keeping one port.
 3. **Zod schemas over TypeScript interfaces alone**: Interfaces disappear at runtime, so Zod validates untrusted request bodies before audit math runs. The trade-off is more schema code, but stronger API safety.
 4. **Conservative API-spend recommendations**: Usage-based API tools intentionally do not produce savings without token-volume inputs. This avoids false-positive savings at the cost of fewer flashy recommendations.
-5. **Supabase as the database**: Audits and leads persist to Supabase `audits` and `leads` tables. This keeps public audit URLs durable across server restarts and app instances.
+5. **Drizzle over Supabase Postgres**: Audits and leads persist through Drizzle ORM using the Supabase Postgres connection string. This keeps public audit URLs durable while avoiding direct Supabase client APIs.
 
 ## Project structure
 
 - `app/` - Next App Router pages and React UI.
-- `server/` - Express API, Zod models, audit engine, pricing data, storage, and Gemini summary service.
+- `server/` - Express API, Zod models, audit engine, Drizzle schema/storage, pricing data, and Gemini summary service.
 - `public/` - Static assets.
 - `docs/ARCHITECTURE.md`, `docs/SUPABASE_SCHEMA.md`, `docs/DEVLOG.md`, `docs/TESTS.md`, `docs/PRICING_DATA.md`, `docs/PROMPTS.md`, `docs/REFLECTION.md` - required engineering documentation.

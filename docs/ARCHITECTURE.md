@@ -17,12 +17,14 @@ flowchart LR
         Pricing["Typed pricing seed data<br/>server/pricingData.ts"]
         Schemas["Zod request schemas<br/>server/models.ts"]
         Summary["Gemini/fallback summaries<br/>server/summaryService.ts"]
-        Store["AuditStore<br/>server/storage.ts"]
+        Email["Transactional email<br/>Resend REST API"]
+        Store["AuditStore + Drizzle<br/>server/storage.ts"]
     end
 
     subgraph Data["Persistence and external services"]
-        Supabase["Supabase<br/>audits + leads"]
+        Database["Supabase Postgres<br/>audits + leads"]
         Gemini["Gemini API"]
+        Resend["Resend API"]
     end
 
     User --> ReactUI
@@ -36,8 +38,10 @@ flowchart LR
     Engine --> Pricing
     Express --> Summary
     Summary -. "GEMINI_API_KEY present" .-> Gemini
+    Express --> Email
+    Email -. "RESEND_API_KEY present" .-> Resend
     Express --> Store
-    Store -- "SUPABASE_URL + secret key" --> Supabase
+    Store -- "DATABASE_URL" --> Database
     Store --> Engine
 ```
 
@@ -49,9 +53,9 @@ flowchart LR
 4. Zod validates the audit request: 1-20 tools, unique `tool_id`, team size bounds, billing cycle, non-negative spend, and maximum monthly spend.
 5. `server/auditEngine.ts` computes normalized monthly spend, tier matching, recommended plan, savings, annual totals, savings percentage, and fallback summary.
 6. `server/summaryService.ts` uses Gemini only when `GEMINI_API_KEY` or `GOOGLE_API_KEY` exists; otherwise it returns the deterministic fallback summary.
-7. `server/storage.ts` upserts the audit to Supabase `audits`. Missing Supabase configuration is a server configuration error.
-8. Lead capture sends `POST /api/lead`; the lead is inserted into Supabase `leads`.
-9. Public audit pages render at `/audit/:uuid`; the server page fetches `GET /api/share/:uuid`, which strips PII and returns aggregate audit data only.
+7. `server/storage.ts` uses Drizzle ORM to upsert the audit to the Postgres `audits` table. Missing `DATABASE_URL` is a server configuration error.
+8. Lead capture sends `POST /api/lead`; honeypot and IP rate-limit checks run first, Gemini writes a short internal lead brief, the lead is inserted into Postgres through Drizzle, and Resend sends a confirmation email when configured.
+9. Public audit pages render at `/audit/:uuid`; the server page fetches `GET /api/share/:uuid`, which strips PII and returns tool-level savings data only.
 
 ## Stack justification
 
@@ -59,8 +63,9 @@ flowchart LR
 - **Express inside the Next server**: gives explicit backend route control without running a separate backend port or Python service.
 - **TypeScript + Zod**: replaces Pydantic with compile-time types plus runtime validation for untrusted JSON.
 - **Decimal.js**: keeps financial math deterministic and avoids ordinary JavaScript floating-point surprises.
-- **Supabase**: required database provider for durable audits and leads.
+- **Drizzle + Supabase Postgres**: Drizzle provides typed persistence while Supabase Postgres provides the hosted database.
 - **Gemini API**: enables optional executive summaries without making LLM availability a hard dependency. Gemini is the only LLM provider used by the backend.
+- **Resend REST API**: sends transactional audit confirmations with a simple server-side fetch call and no frontend exposure of email credentials.
 
 ## API surface
 
@@ -71,18 +76,22 @@ flowchart LR
 - `GET /api/share/:auditId` - PII-safe public audit view.
 - `POST /api/lead` - lead capture.
 
-## Supabase database
+## Database
 
-The required tables are documented in `docs/SUPABASE_SCHEMA.md`. `audits.audit_id` is the durable UUID used by `/audit/:uuid`; `audits.payload` stores the full typed audit result, while `leads.audit_id` links captured leads back to the audit.
+The required tables are defined in `server/db/schema.ts` and documented in `docs/SUPABASE_SCHEMA.md`. `audits.audit_id` is the durable UUID used by `/audit/:uuid`; `audits.payload` stores the full typed audit result, while `leads.audit_id` links captured leads back to the audit.
+
+## Abuse protection and email
+
+Lead capture uses a hidden honeypot field plus an in-memory IP rate limit of 5 lead submissions per hour. This is intentionally lightweight for an MVP because it blocks common bot form fills without adding hCaptcha friction before the user receives value. Transactional email uses Resend via `RESEND_API_KEY`; high-savings cases explicitly say Credex will reach out.
 
 ## Scalability plan for 10k audits/day
 
 10k audits/day is roughly 7 audits/minute on average, with higher bursts during demos or campaigns. The current app can handle that in a small deployment if Supabase is configured, but these changes would harden it:
 
-1. **Persist every audit in Supabase** and keep service-role credentials server-only.
+1. **Persist every audit through Drizzle** and keep `DATABASE_URL` server-only.
 2. **Add indexes** on `audits.audit_id`, `audits.created_at`, and `leads.audit_id`.
 3. **Move Gemini summaries to a queue** if p95 latency or rate limits become a problem; return fallback immediately and update `ai_summary` asynchronously.
 4. **Cache `/api/tools`** because pricing seed data is static during a deployment.
 5. **Add rate limiting** for `/api/audit/calculate` and `/api/lead` by IP/session to protect spend and prevent spam.
 6. **Add structured logs and metrics** for audit count, validation failures, Supabase errors, and LLM fallback rate.
-7. **Run multiple app instances** behind the hosting provider’s load balancer; Supabase is the shared persistence layer across instances.
+7. **Run multiple app instances** behind the hosting provider’s load balancer; Supabase Postgres is the shared persistence layer across instances.

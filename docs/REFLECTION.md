@@ -10,7 +10,7 @@ I reversed the original split-stack backend decision. The project began with a P
 
 ## 3. What is the week-2 roadmap?
 
-Week 2 should focus on production readiness and better financial accuracy. First, verify every price in `server/pricingData.ts` against official vendor pages and update `PRICING_DATA.md` with final dates. Second, add token-volume inputs for usage-based API spend so recommendations can become more precise. Third, add Supabase schema migrations, indexes, and a deployment checklist. Fourth, capture screenshots and a short demo video for the README. Fifth, add browser-level Playwright tests for the audit flow, lead capture, and public audit page. Finally, add rate limiting and structured logging for `/api/audit/calculate` and `/api/lead`.
+Week 2 should focus on production readiness and better financial accuracy. First, verify every price in `server/pricingData.ts` against official vendor pages and update `PRICING_DATA.md` with final dates. Second, add token-volume inputs for usage-based API spend so recommendations can become more precise. Third, add Drizzle migrations, indexes, and a deployment checklist. Fourth, capture screenshots and a short demo video for the README. Fifth, add browser-level Playwright tests for the audit flow, lead capture, and public audit page. Finally, add rate limiting and structured logging for `/api/audit/calculate` and `/api/lead`.
 
 ## 4. How did AI tools help, and where did they make mistakes?
 
@@ -22,4 +22,4 @@ AI tools helped with code translation, migration planning, route-shape checks, a
 - **Technical correctness: 8/10.** The audit engine has tests and runtime validation, but pricing needs final external verification.
 - **UI quality: 8/10.** The custom UI is cohesive and no longer overuses curved elements, but final screenshots are still needed.
 - **Documentation: 7/10.** The required docs now match the architecture, but README media links and source verification should be completed before submission.
-- **Production readiness: 6/10.** The app builds and runs locally, but deployment, rate limiting, logs, and Supabase migrations still need hardening.
+- **Production readiness: 6/10.** The app builds and runs locally, but deployment, rate limiting, logs, and Drizzle migrations still need hardening.

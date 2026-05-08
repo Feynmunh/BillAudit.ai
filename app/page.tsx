@@ -92,6 +92,7 @@ export default function Home() {
   const [company, setCompany] = useState("");
   const [role, setRole] = useState("");
   const [leadTeamSize, setLeadTeamSize] = useState("1");
+  const [website, setWebsite] = useState("");
   const [useCase, setUseCase] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "error" | "sent">("idle");
   const [message, setMessage] = useState("");
@@ -200,6 +201,9 @@ export default function Home() {
       role: role || null,
       team_size: leadTeamSize ? Math.max(1, Math.round(numeric(leadTeamSize))) : null,
       audit_id: result.audit_id,
+      lead_summary: null,
+      contact_priority: "standard",
+      website,
     };
     const parsedLead = leadSchema.safeParse(leadPayload);
     if (!parsedLead.success) {
@@ -218,7 +222,8 @@ export default function Home() {
         throw new Error("Lead capture failed.");
       }
       setStatus("sent");
-      setMessage(`Public audit URL reserved: /audit/${result.audit_id}`);
+      const json = (await response.json()) as { public_url?: string; email_status?: "sent" | "skipped" };
+      setMessage(`AI brief saved. Share URL: ${json.public_url ?? `/audit/${result.audit_id}`}${json.email_status === "sent" ? " · Email sent" : ""}`);
     } catch (error) {
       setStatus("error");
       setMessage(error instanceof Error ? error.message : "Lead capture failed.");
@@ -431,28 +436,36 @@ export default function Home() {
 
       <section id="lead" className="grid bg-[#111111] text-white lg:grid-cols-[1fr_0.8fr]">
         <div className="border-b border-white/10 p-6 lg:border-b-0 lg:border-r lg:p-12">
-          <p className="font-mono text-xs uppercase tracking-[0.24em] text-white/45">Lead capture</p>
-          <h2 className="mt-4 max-w-3xl text-4xl font-medium leading-[1] tracking-[-0.04em] lg:text-6xl">Turn the audit into a public signal.</h2>
-          <p className="mt-5 max-w-xl text-lg leading-relaxed text-white/55">Capture the benchmark export and reserve a PII-safe share link after the savings value is visible.</p>
+          <p className="font-mono text-xs uppercase tracking-[0.24em] text-white/45">AI follow-up</p>
+          <h2 className="mt-4 max-w-3xl text-4xl font-medium leading-[1] tracking-[-0.04em] lg:text-6xl">Claim the clean version.</h2>
+          <p className="mt-5 max-w-xl text-lg leading-relaxed text-white/55">Drop an email. Gemini writes the internal Credex brief, sends your confirmation, and unlocks a PII-safe public snapshot.</p>
+          {result && (
+            <div className="mt-8 grid gap-3 border border-white/10 bg-white/5 p-5 font-mono text-xs uppercase tracking-[0.12em] text-white/55">
+              <div className="flex justify-between gap-4"><span>AI brief</span><strong className="text-[#17e86f]">Auto-generated</strong></div>
+              <div className="flex justify-between gap-4"><span>Public URL</span><strong className="text-[#17e86f]">PII stripped</strong></div>
+              <div className="flex justify-between gap-4"><span>Credex reach-out</span><strong className="text-[#17e86f]">High-savings cases</strong></div>
+            </div>
+          )}
         </div>
         <form onSubmit={captureLead} className="grid content-center gap-4 p-6 lg:p-12">
+          <input tabIndex={-1} autoComplete="off" value={website} onChange={(event) => setWebsite(event.target.value)} className="hidden" aria-hidden="true" name="website" />
           <label className="field-label text-white/60">
             Work email
             <input type="email" required value={email} onChange={(event) => setEmail(event.target.value)} className="field-input bg-white text-black" />
           </label>
           <label className="field-label text-white/60">
-            Company
-            <input value={company} onChange={(event) => setCompany(event.target.value)} className="field-input bg-white text-black" />
+            Company <span className="text-white/35">optional</span>
+            <input value={company} onChange={(event) => setCompany(event.target.value)} className="field-input bg-white text-black" placeholder="Acme AI Ops" />
           </label>
           <label className="field-label text-white/60">
-            Role
-            <input value={role} onChange={(event) => setRole(event.target.value)} className="field-input bg-white text-black" />
+            Role <span className="text-white/35">optional</span>
+            <input value={role} onChange={(event) => setRole(event.target.value)} className="field-input bg-white text-black" placeholder="Finance, Founder, Ops" />
           </label>
           <label className="field-label text-white/60">
-            Team size
+            Team size <span className="text-white/35">optional</span>
             <input inputMode="numeric" value={leadTeamSize} onChange={(event) => setLeadTeamSize(event.target.value)} className="field-input bg-white text-black" />
           </label>
-          <button type="submit" className="button-light" disabled={!result || status === "loading"}>Send benchmark + share URL →</button>
+          <button type="submit" className="button-light" disabled={!result || status === "loading"}>{status === "loading" ? "Writing brief..." : "Email me the audit →"}</button>
         </form>
       </section>
     </main>

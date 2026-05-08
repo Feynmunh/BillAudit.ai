@@ -82,11 +82,11 @@
 
 **Hours worked:** 2
 
-**What I did:** Enforced Supabase as the required database provider, kept Gemini as the only LLM provider, added `/api/audit/calculate`, added the public `/audit/:uuid` route, and documented the Supabase `audits` and `leads` schema.
+**What I did:** Enforced durable database persistence, kept Gemini as the only LLM provider, added `/api/audit/calculate`, added the public `/audit/:uuid` route, and documented the `audits` and `leads` schema.
 
 **What I learned:** Provider requirements should be encoded in both runtime configuration and documentation; optional fallback language can contradict production architecture.
 
-**Blockers:** Full Supabase integration QA requires real `SUPABASE_URL` and server-side secret/service-role credentials.
+**Blockers:** Full Supabase Postgres integration QA requires a real server-only `DATABASE_URL`.
 
 **Plan for tomorrow:** Run against the production Supabase project, capture final screenshots, and add a disposable Supabase integration test path.
 

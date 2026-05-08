@@ -55,6 +55,9 @@ export const leadSchema = z.object({
   role: z.string().max(100).nullable().optional(),
   team_size: z.coerce.number().int().min(1).max(10_000).nullable().optional(),
   audit_id: z.string().min(1),
+  lead_summary: z.string().max(700).nullable().optional(),
+  contact_priority: z.enum(["standard", "high_savings"]).default("standard"),
+  website: z.string().max(500).optional(),
   created_at: z.string().datetime().optional(),
 });
 
@@ -102,6 +105,7 @@ export type PublicAuditView = {
   savings_percentage: number;
   created_at: string;
   tool_count: number;
+  tools: Array<Pick<ToolRecommendation, "tool_id" | "current_plan" | "recommended_plan" | "monthly_savings" | "annual_savings" | "savings_percentage" | "flags">>;
 };
 
 export type AuditResponse = {

@@ -1,35 +1,33 @@
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { eq } from "drizzle-orm";
 
 import { AuditEngine } from "./auditEngine.js";
+import { db } from "./db/client.js";
+import { audits, leads } from "./db/schema.js";
 import type { AuditResult, Lead, PublicAuditView } from "./models.js";
 
-type PayloadRow = { payload: AuditResult };
-
-function hasPayload(value: unknown): value is PayloadRow {
-  return typeof value === "object" && value !== null && "payload" in value;
-}
-
 export class AuditStore {
-  private readonly client: SupabaseClient;
-
-  constructor() {
-    const url = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const key = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (!url || !key) {
-      throw new Error("Supabase is required: set SUPABASE_URL and SUPABASE_SECRET_KEY or SUPABASE_SERVICE_ROLE_KEY.");
-    }
-    this.client = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } });
-  }
-
   async saveAudit(audit: AuditResult): Promise<void> {
-    const { error } = await this.client.from("audits").upsert({ audit_id: audit.audit_id, payload: audit, savings_level: audit.savings_level, total_monthly_savings: audit.total_monthly_savings, total_annual_savings: audit.total_annual_savings });
-    if (error) throw error;
+    await db.insert(audits).values({
+      auditId: audit.audit_id,
+      payload: audit,
+      savingsLevel: audit.savings_level,
+      totalMonthlySavings: audit.total_monthly_savings,
+      totalAnnualSavings: audit.total_annual_savings,
+      createdAt: audit.created_at,
+    }).onConflictDoUpdate({
+      target: audits.auditId,
+      set: {
+        payload: audit,
+        savingsLevel: audit.savings_level,
+        totalMonthlySavings: audit.total_monthly_savings,
+        totalAnnualSavings: audit.total_annual_savings,
+      },
+    });
   }
 
   async getAudit(auditId: string): Promise<AuditResult | null> {
-    const { data, error } = await this.client.from("audits").select("payload").eq("audit_id", auditId).limit(1).maybeSingle();
-    if (error) throw error;
-    return hasPayload(data) ? data.payload : null;
+    const [row] = await db.select({ payload: audits.payload }).from(audits).where(eq(audits.auditId, auditId)).limit(1);
+    return row?.payload ?? null;
   }
 
   async getPublicAudit(auditId: string): Promise<PublicAuditView | null> {
@@ -38,7 +36,15 @@ export class AuditStore {
   }
 
   async saveLead(lead: Lead): Promise<void> {
-    const { error } = await this.client.from("leads").insert(lead);
-    if (error) throw error;
+    await db.insert(leads).values({
+      email: lead.email,
+      company: lead.company ?? null,
+      role: lead.role ?? null,
+      teamSize: lead.team_size ?? null,
+      auditId: lead.audit_id,
+      leadSummary: lead.lead_summary ?? null,
+      contactPriority: lead.contact_priority,
+      createdAt: lead.created_at,
+    });
   }
 }
