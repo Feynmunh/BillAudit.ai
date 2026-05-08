@@ -1,0 +1,52 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]: Instant AI spend audit · no login required · built for Credex operators
+    - navigation [ref=e4]:
+      - link "BillAudit home" [ref=e5] [cursor=pointer]:
+        - /url: "#top"
+        - img "BillAudit" [ref=e6]
+      - link "Run audit" [ref=e7] [cursor=pointer]:
+        - /url: "#audit"
+    - generic [ref=e8]:
+      - generic [ref=e9]:
+        - paragraph [ref=e10]: AI finance control plane
+        - heading "Audit your AI burn before renewal." [level=1] [ref=e11]
+        - paragraph [ref=e12]: Surface wasted spend across Cursor, Claude, ChatGPT, Gemini and API usage in under a minute.
+        - generic [ref=e13]:
+          - link "Get instant audit →" [ref=e14] [cursor=pointer]:
+            - /url: "#audit"
+          - link "See savings model →" [ref=e15] [cursor=pointer]:
+            - /url: "#results"
+      - generic [ref=e17]:
+        - generic [ref=e19]:
+          - generic [ref=e20]: YOUR AI STACK
+          - strong [ref=e21]: $18.4K/mo
+        - generic [ref=e22]:
+          - generic [ref=e23]: BILLAUDIT
+          - strong [ref=e24]: $2.8K found
+        - generic [ref=e25]:
+          - generic [ref=e26]: NEXT RENEWAL
+          - strong [ref=e27]: clean plan
+    - generic [ref=e32]:
+      - generic [ref=e33]:
+        - paragraph [ref=e34]: Operator promise
+        - paragraph [ref=e35]: No login gate before value
+      - generic [ref=e36]:
+        - paragraph [ref=e37]: Operator promise
+        - paragraph [ref=e38]: Finance-literate recommendations
+      - generic [ref=e39]:
+        - paragraph [ref=e40]: Operator promise
+        - paragraph [ref=e41]: Public audit link for sharing
+    - generic [ref=e42]:
+      - generic [ref=e45]:
+        - paragraph [ref=e46]: Spend input
+        - heading "A cleaner way to map AI spend." [level=2] [ref=e47]
+        - paragraph [ref=e48]: The audit form loads as you reach it so the mobile homepage stays fast.
+      - generic [ref=e56]:
+        - paragraph [ref=e57]: Audit dashboard
+        - heading "Savings signal." [level=2] [ref=e58]
+      - generic [ref=e59]:
+        - paragraph [ref=e60]: AI follow-up
+        - heading "Claim the clean version." [level=2] [ref=e61]
+  - button "Open Next.js Dev Tools" [ref=e67] [cursor=pointer]:
+    - img [ref=e68]

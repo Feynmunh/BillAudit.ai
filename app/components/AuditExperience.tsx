@@ -10,6 +10,16 @@ function emailLooksValid(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
+async function readJsonResponse<T>(response: Response, fallbackMessage: string): Promise<T> {
+  const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
+  if (!contentType.includes("application/json")) {
+    const body = await response.text();
+    const serverReturnedHtml = body.trimStart().startsWith("<!DOCTYPE") || body.trimStart().startsWith("<html");
+    throw new Error(serverReturnedHtml ? `${fallbackMessage} The server returned an HTML error page instead of JSON.` : `${fallbackMessage} The server returned a non-JSON response.`);
+  }
+  return await response.json() as T;
+}
+
 export function AuditExperience() {
   const [form, setForm] = useState<ToolSpend[]>(emptyForm);
   const [result, setResult] = useState<AuditResult | null>(null);
@@ -107,7 +117,7 @@ export function AuditExperience() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const json = (await response.json()) as AuditResponse;
+      const json = await readJsonResponse<AuditResponse>(response, "Audit failed.");
       if (!response.ok || !json.success || !json.data) {
         throw new Error(json.error ?? "Audit failed. Start the app server and try again.");
       }
@@ -147,11 +157,11 @@ export function AuditExperience() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(leadPayload),
       });
-      if (!response.ok) {
-        throw new Error("Lead capture failed.");
+      const json = await readJsonResponse<{ success?: boolean; error?: string; public_url?: string; email_status?: "sent" | "skipped" | "failed" }>(response, "Lead capture failed.");
+      if (!response.ok || json.success === false) {
+        throw new Error(json.error ?? "Lead capture failed.");
       }
       setStatus("sent");
-      const json = (await response.json()) as { public_url?: string; email_status?: "sent" | "skipped" | "failed" };
       setMessage(`AI brief saved. Share URL: ${json.public_url ?? `/audit/${result.audit_id}`}${json.email_status === "sent" ? " · Email sent" : ""}`);
     } catch (error) {
       setStatus("error");
