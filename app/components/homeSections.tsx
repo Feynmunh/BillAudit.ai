@@ -200,44 +200,29 @@ export function SpendInputSection({ form, toolsConfig, teamSize, useCase, status
               const isActive = selectedToolSpend?.toolId === tool.id;
               const logoStyle = { backgroundColor: tool.logoColor, WebkitMaskImage: `url(${tool.logoSrc})`, maskImage: `url(${tool.logoSrc})` };
               return (
-                <button
-                  key={tool.id}
-                  type="button"
-                  aria-pressed={isActive}
-                  className={`audit-tab ${isActive ? "audit-tab-active" : ""}`}
-                  onClick={() => {
-                    onSelectToolAction(tool.id);
-                    if (toolSpend && !toolSpend.enabled) {
-                      onUpdateToolAction(tool.id, { enabled: true });
-                    }
-                  }}
-                >
-                  <span className="tool-tab-logo-wrap">
-                    <span className="tool-logo-frame"><span className="tool-logo-image" style={logoStyle} /></span>
-                    {isActive && (
-                      <span
-                        role="button"
-                        tabIndex={0}
-                        className="tool-tab-remove"
-                        aria-label={`Remove ${tool.name} from audit`}
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          removeSelectedTool();
-                        }}
-                        onKeyDown={(event) => {
-                          if (event.key === "Enter" || event.key === " ") {
-                            event.preventDefault();
-                            event.stopPropagation();
-                            removeSelectedTool();
-                          }
-                        }}
-                      >
-                        −
-                      </span>
-                    )}
-                  </span>
-                  <span className="sr-only">{tool.name}</span>
-                </button>
+                <div key={tool.id} className="audit-tab-shell">
+                  <button
+                    type="button"
+                    aria-pressed={isActive}
+                    className={`audit-tab ${isActive ? "audit-tab-active" : ""}`}
+                    onClick={() => {
+                      onSelectToolAction(tool.id);
+                      if (toolSpend && !toolSpend.enabled) {
+                        onUpdateToolAction(tool.id, { enabled: true });
+                      }
+                    }}
+                  >
+                    <span className="tool-tab-logo-wrap">
+                      <span className="tool-logo-frame"><span className="tool-logo-image" style={logoStyle} /></span>
+                    </span>
+                    <span className="sr-only">{tool.name}</span>
+                  </button>
+                  {isActive && (
+                    <button type="button" className="tool-tab-remove" aria-label={`Remove ${tool.name} from audit`} onClick={removeSelectedTool}>
+                      −
+                    </button>
+                  )}
+                </div>
               );
             })}
             {addableTools.length > 0 && (
@@ -403,7 +388,7 @@ export function LeadSection({ result, email, company, role, leadTeamSize, websit
           </div>
         )}
         {isHighSavings && (
-          <a href={credexBookingUrl} className="button-light mt-6 inline-flex w-fit" target="_blank" rel="noreferrer">
+          <a href={credexBookingUrl} className="button-light mt-6 inline-flex w-fit" target="_blank" rel="noopener noreferrer">
             Book Credex consultation →
           </a>
         )}

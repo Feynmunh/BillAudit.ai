@@ -160,14 +160,20 @@ export function AuditExperience() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(leadPayload),
       });
-      const json = await readJsonResponse<{ success?: boolean; error?: string; public_url?: string; email_status?: "sent" | "skipped" | "failed" }>(response, "Lead capture failed.");
+      const json = await readJsonResponse<{ success?: boolean; message?: string; error?: string; public_url?: string; email_status?: "sent" | "skipped" | "failed" }>(response, "Lead capture failed.");
       if (!response.ok || json.success === false) {
         throw new Error(json.error ?? "Lead capture failed.");
       }
       const nextPublicUrl = json.public_url ?? `/audit/${result.audit_id}`;
       setPublicUrl(nextPublicUrl);
       setStatus("sent");
-      setMessage(json.email_status === "sent" ? "Report captured. Share URL unlocked. Confirmation email sent successfully." : "Report captured. Share URL unlocked. Confirmation email was not sent because email delivery is not configured.");
+      if (json.email_status === "sent") {
+        setMessage("Report captured. Share URL unlocked. Confirmation email sent successfully.");
+      } else if (json.email_status === "skipped" || json.email_status === "failed") {
+        setMessage("Report captured. Share URL unlocked. Confirmation email was not sent because email delivery is not configured.");
+      } else {
+        setMessage(json.message ?? "Report captured. Share URL unlocked.");
+      }
     } catch (error) {
       setStatus("error");
       setMessage(error instanceof Error ? error.message : "Lead capture failed.");
