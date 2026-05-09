@@ -60,15 +60,28 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
   return {
     title,
     description,
+    alternates: {
+      canonical: `/audit/${uuid}`,
+    },
     openGraph: {
       title,
       description,
       type: "article",
+      url: `/audit/${uuid}`,
+      images: [
+        {
+          url: `/audit/${uuid}/opengraph-image`,
+          width: 1200,
+          height: 630,
+          alt: "BillAudit public AI spend audit snapshot",
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      images: [`/audit/${uuid}/opengraph-image`],
     },
   };
 }
@@ -124,6 +137,15 @@ export default async function AuditPage({ params }: PageParams) {
                 <p className="font-mono text-xs uppercase tracking-[0.25em]">Share loop</p>
                 <p className="mt-3 text-3xl font-black tracking-tight">No email. No company. Just tools, savings, and the benchmark.</p>
               </div>
+              {audit.savings_level === "high" && (
+                <div className="grid gap-4 border border-black bg-black p-6 text-white md:grid-cols-[1fr_auto] md:items-center">
+                  <div>
+                    <p className="font-mono text-xs uppercase tracking-[0.25em] text-[#17e86f]">High-savings case</p>
+                    <p className="mt-3 text-3xl font-black tracking-tight">Credex can help turn this benchmark into renewal leverage.</p>
+                  </div>
+                  <Link href="/?consultation=credex#audit" className="button-light">Run yours + book →</Link>
+                </div>
+              )}
             </div>
           ) : (
             <div className="mt-8 grid gap-6">
