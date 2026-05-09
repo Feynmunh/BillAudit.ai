@@ -1,24 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-type PublicAuditView = {
-  audit_id: string;
-  savings_level: "high" | "moderate" | "optimal";
-  total_monthly_savings: number;
-  total_annual_savings: number;
-  savings_percentage: number;
-  created_at: string;
-  tool_count: number;
-  tools: Array<{
-    tool_id: string;
-    current_plan: string;
-    recommended_plan: string;
-    monthly_savings: number;
-    annual_savings: number;
-    savings_percentage: number;
-    flags: string[];
-  }>;
-};
+import type { PublicAuditView } from "@/server/models";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 type PageParams = {
   params: Promise<{ uuid: string }>;
@@ -34,14 +20,8 @@ function money(value: number): string {
 
 async function getPublicAudit(uuid: string): Promise<PublicAuditView | null> {
   try {
-    const apiBase = process.env.NEXT_PUBLIC_API_URL ?? `http://localhost:${process.env.PORT ?? 3000}`;
-    const response = await fetch(`${apiBase}/api/share/${uuid}`, {
-      cache: "no-store",
-    });
-    if (!response.ok) {
-      return null;
-    }
-    return (await response.json()) as PublicAuditView;
+    const { AuditStore } = await import("@/server/storage");
+    return await new AuditStore().getPublicAudit(uuid);
   } catch {
     return null;
   }
