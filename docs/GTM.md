@@ -30,3 +30,4 @@ Product proof points
 - Gemini-generated executive summary with deterministic fallback.
 - Resend confirmation email sent to the address entered by the user.
 - PII-safe public audit URL backed by Supabase Postgres.
+- High-savings users get an explicit Credex consultation CTA after the audit/report capture step.

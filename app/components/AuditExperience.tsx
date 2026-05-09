@@ -167,7 +167,7 @@ export function AuditExperience() {
       const nextPublicUrl = json.public_url ?? `/audit/${result.audit_id}`;
       setPublicUrl(nextPublicUrl);
       setStatus("sent");
-      setMessage(`Report captured. Share URL unlocked${json.email_status === "sent" ? " and confirmation email sent" : ""}.`);
+      setMessage(json.email_status === "sent" ? "Report captured. Share URL unlocked. Confirmation email sent successfully." : "Report captured. Share URL unlocked. Confirmation email was not sent because email delivery is not configured.");
     } catch (error) {
       setStatus("error");
       setMessage(error instanceof Error ? error.message : "Lead capture failed.");

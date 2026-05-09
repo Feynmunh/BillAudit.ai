@@ -59,7 +59,8 @@ flowchart LR
 6. `server/summaryService.ts` uses Gemini only when `GEMINI_API_KEY` or `GOOGLE_API_KEY` exists; otherwise it returns the deterministic fallback summary.
 7. `server/storage.ts` uses Drizzle ORM to upsert the audit to the Postgres `audits` table. Missing `DATABASE_URL` is a server configuration error.
 8. Lead capture sends `POST /api/lead`; honeypot and IP rate-limit checks run first, Gemini writes a short internal lead brief, the lead is inserted into Postgres through Drizzle, and Resend sends a confirmation email to the user-entered address when `RESEND_API_KEY` and a verified `EMAIL_FROM` are configured.
-9. Public audit pages render at `/audit/:uuid`; the server page fetches `GET /api/share/:uuid`, which strips PII and returns tool-level savings data only.
+9. Capturing the report unlocks the public `/audit/:uuid` share URL in the UI. High-savings cases also expose a Credex consultation CTA powered by `NEXT_PUBLIC_CREDEX_BOOKING_URL` when configured.
+10. Public audit pages render at `/audit/:uuid`; the server page fetches `GET /api/share/:uuid`, which strips PII and returns tool-level savings data only.
 
 ## Stack justification
 
@@ -86,7 +87,7 @@ The required tables are defined in `server/db/schema.ts` and documented in `docs
 
 ## Abuse protection and email
 
-Lead capture uses a hidden honeypot field plus an in-memory IP rate limit of 5 lead submissions per hour. This is intentionally lightweight for an MVP because it blocks common bot form fills without adding hCaptcha friction before the user receives value. Transactional email uses Resend via `RESEND_API_KEY` and requires `EMAIL_FROM`; high-savings cases explicitly say Credex will reach out.
+Lead capture uses a hidden honeypot field plus an in-memory IP rate limit of 5 lead submissions per hour. This is intentionally lightweight for an MVP because it blocks common bot form fills without adding hCaptcha friction before the user receives value. Transactional email uses Resend via `RESEND_API_KEY` and requires `EMAIL_FROM`; high-savings cases explicitly say Credex will reach out and show the consultation CTA.
 
 ## Scalability plan for 10k audits/day
 

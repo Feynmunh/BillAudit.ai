@@ -34,10 +34,11 @@ GEMINI_API_KEY=
 GEMINI_MODEL=gemini-2.5-flash
 RESEND_API_KEY=
 EMAIL_FROM=BillAudit <onboarding@resend.dev>
+NEXT_PUBLIC_CREDEX_BOOKING_URL=https://...
 PORT=3000
 ```
 
-`DATABASE_URL` should be a server-only Supabase Postgres connection string. Drizzle ORM manages the `audits` and `leads` schema. Gemini powers audit summaries and internal lead briefs. `RESEND_API_KEY` sends audit confirmation emails to the user-entered lead email; `EMAIL_FROM` must be a verified Resend sender/domain.
+`DATABASE_URL` should be a server-only Supabase Postgres connection string. Drizzle ORM manages the `audits` and `leads` schema. Gemini powers audit summaries and internal lead briefs. `RESEND_API_KEY` sends audit confirmation emails to the user-entered lead email; `EMAIL_FROM` must be a verified Resend sender/domain. `NEXT_PUBLIC_CREDEX_BOOKING_URL` is optional and powers the high-savings Credex consultation CTA; without it, the CTA falls back to a prefilled email link.
 
 ## Current product surface
 

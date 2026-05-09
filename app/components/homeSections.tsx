@@ -180,6 +180,14 @@ export function SpendInputSection({ form, toolsConfig, teamSize, useCase, status
   const selectedConfig = selectedToolSpend ? toolsConfig.find((tool) => tool.id === selectedToolSpend.toolId) : undefined;
   const activeTools = toolsConfig.filter((tool) => tool.id === selectedToolSpend?.toolId || form.some((item) => item.toolId === tool.id && item.enabled));
   const addableTools = toolsConfig.filter((tool) => !activeTools.some((activeTool) => activeTool.id === tool.id));
+  const removeSelectedTool = () => {
+    if (!selectedToolSpend) return;
+    const nextActiveTool = form.find((tool) => tool.enabled && tool.toolId !== selectedToolSpend.toolId) ?? form.find((tool) => tool.toolId !== selectedToolSpend.toolId);
+    onUpdateToolAction(selectedToolSpend.toolId, { enabled: false });
+    if (nextActiveTool) {
+      onSelectToolAction(nextActiveTool.toolId);
+    }
+  };
 
   return (
     <section id="audit" className="audit-section">
@@ -204,7 +212,30 @@ export function SpendInputSection({ form, toolsConfig, teamSize, useCase, status
                     }
                   }}
                 >
-                  <span className="tool-logo-frame"><span className="tool-logo-image" style={logoStyle} /></span>
+                  <span className="tool-tab-logo-wrap">
+                    <span className="tool-logo-frame"><span className="tool-logo-image" style={logoStyle} /></span>
+                    {isActive && (
+                      <span
+                        role="button"
+                        tabIndex={0}
+                        className="tool-tab-remove"
+                        aria-label={`Remove ${tool.name} from audit`}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          removeSelectedTool();
+                        }}
+                        onKeyDown={(event) => {
+                          if (event.key === "Enter" || event.key === " ") {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            removeSelectedTool();
+                          }
+                        }}
+                      >
+                        −
+                      </span>
+                    )}
+                  </span>
                   <span className="sr-only">{tool.name}</span>
                 </button>
               );
@@ -249,6 +280,26 @@ export function SpendInputSection({ form, toolsConfig, teamSize, useCase, status
             </div>
             {selectedToolSpend && selectedConfig && (
               <ToolRow toolSpend={selectedToolSpend} config={selectedConfig} onChange={(next) => onUpdateToolAction(selectedToolSpend.toolId, next)} />
+            )}
+            {addableTools.length > 0 && (
+              <details className="border border-black/10 bg-white p-4">
+                <summary className="cursor-pointer font-mono text-xs uppercase tracking-[0.16em] text-black/55">+ Add option</summary>
+                <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                  {addableTools.map((tool) => (
+                    <button
+                      key={tool.id}
+                      type="button"
+                      className="button-secondary text-left"
+                      onClick={() => {
+                        onSelectToolAction(tool.id);
+                        onUpdateToolAction(tool.id, { enabled: true });
+                      }}
+                    >
+                      Add {tool.name}
+                    </button>
+                  ))}
+                </div>
+              </details>
             )}
           </div>
           <div className="audit-action-row">
