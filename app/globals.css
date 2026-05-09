@@ -211,7 +211,7 @@ select {
 
 .audit-console {
   min-width: 0;
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid rgb(248 247 242 / 0.28);
   background: #f8f7f2;
   color: #111111;
@@ -219,6 +219,7 @@ select {
 }
 
 .audit-tabs {
+  position: relative;
   display: flex;
   width: 100%;
   min-width: 0;
@@ -230,6 +231,8 @@ select {
 }
 
 .audit-tab {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex: 0 0 5rem;
   min-height: 4.45rem;
@@ -252,6 +255,7 @@ select {
 
 .audit-tab:hover,
 .audit-tab-active {
+  z-index: 2;
   background: #fffde8;
   color: #111111;
   box-shadow: inset 0 -5px 0 #17e86f;
@@ -263,10 +267,6 @@ select {
   min-height: 4.45rem;
   border-bottom: 2px solid #111111;
   border-right: 2px solid #111111;
-}
-
-.audit-tool-picker[open] {
-  flex-basis: min(22rem, 100%);
 }
 
 .audit-add-tool {
@@ -291,15 +291,17 @@ select {
 }
 
 .audit-tool-menu {
-  position: static;
+  position: absolute;
   z-index: 20;
+  right: 0;
+  top: calc(100% + 0.5rem);
   display: grid;
-  width: 100%;
+  width: min(18rem, calc(100vw - 2rem));
   max-height: 21rem;
   overflow-y: auto;
-  border-top: 2px solid #111111;
+  border: 2px solid #111111;
   background: #f8f7f2;
-  box-shadow: inset -8px 0 0 #17e86f;
+  box-shadow: 8px 8px 0 #17e86f;
 }
 
 .audit-tool-menu-item {
@@ -386,6 +388,32 @@ select {
   gap: 1.5rem;
   padding: 1.4rem;
   background: #f8f7f2;
+}
+
+.audit-add-option-menu {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 0.55rem;
+  margin-top: 0.85rem;
+}
+
+.audit-add-option-button {
+  min-height: 2.65rem;
+  border: 1px solid rgb(17 17 17 / 0.16);
+  background: #ffffff;
+  padding: 0 0.8rem;
+  color: #111111;
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.audit-add-option-button:hover {
+  border-color: #111111;
+  background: #fffde8;
 }
 
 @media (min-width: 768px) {

@@ -281,26 +281,6 @@ export function SpendInputSection({ form, toolsConfig, teamSize, useCase, status
             {selectedToolSpend && selectedConfig && (
               <ToolRow toolSpend={selectedToolSpend} config={selectedConfig} onChange={(next) => onUpdateToolAction(selectedToolSpend.toolId, next)} />
             )}
-            {addableTools.length > 0 && (
-              <details className="border border-black/10 bg-white p-4">
-                <summary className="cursor-pointer font-mono text-xs uppercase tracking-[0.16em] text-black/55">+ Add option</summary>
-                <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                  {addableTools.map((tool) => (
-                    <button
-                      key={tool.id}
-                      type="button"
-                      className="button-secondary text-left"
-                      onClick={() => {
-                        onSelectToolAction(tool.id);
-                        onUpdateToolAction(tool.id, { enabled: true });
-                      }}
-                    >
-                      Add {tool.name}
-                    </button>
-                  ))}
-                </div>
-              </details>
-            )}
           </div>
           <div className="audit-action-row">
             <p className="font-mono text-xs uppercase tracking-[0.14em] text-black/48">Draft autosaves across reloads.</p>
