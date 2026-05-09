@@ -211,7 +211,7 @@ select {
 
 .audit-console {
   min-width: 0;
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid rgb(248 247 242 / 0.28);
   background: #f8f7f2;
   color: #111111;
@@ -219,6 +219,7 @@ select {
 }
 
 .audit-tabs {
+  position: relative;
   display: flex;
   width: 100%;
   min-width: 0;
@@ -229,11 +230,17 @@ select {
   scrollbar-width: thin;
 }
 
+.audit-tab-shell {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 5rem;
+  max-width: 5.5rem;
+}
+
 .audit-tab {
   display: flex;
-  flex: 0 0 5rem;
+  width: 100%;
   min-height: 4.45rem;
-  max-width: 5.5rem;
   align-items: center;
   justify-content: center;
   gap: 0.65rem;
@@ -255,6 +262,11 @@ select {
   background: #fffde8;
   color: #111111;
   box-shadow: inset 0 -5px 0 #17e86f;
+}
+
+.audit-tab-shell:has(.audit-tab:hover),
+.audit-tab-shell:has(.audit-tab-active) {
+  z-index: 2;
 }
 
 .audit-tool-picker {
@@ -293,6 +305,8 @@ select {
   top: calc(100% + 0.5rem);
   display: grid;
   width: min(18rem, calc(100vw - 2rem));
+  max-height: 21rem;
+  overflow-y: auto;
   border: 2px solid #111111;
   background: #f8f7f2;
   box-shadow: 8px 8px 0 #17e86f;
@@ -323,6 +337,35 @@ select {
   overflow: hidden;
   border: 1px solid rgb(17 17 17 / 0.12);
   background: rgb(255 255 255 / 0.72);
+}
+
+.tool-tab-logo-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.tool-tab-remove {
+  position: absolute;
+  right: -0.55rem;
+  bottom: -0.55rem;
+  display: grid;
+  width: 0.85rem;
+  height: 0.85rem;
+  place-items: center;
+  border: 1px solid #111111;
+  background: #17e86f;
+  color: #111111;
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.62rem;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 1px 1px 0 #111111;
+}
+
+.tool-tab-remove:hover,
+.tool-tab-remove:focus-visible {
+  background: #ffffff;
+  outline: none;
 }
 
 .tool-logo-image {
