@@ -342,7 +342,9 @@ type LeadSectionProps = {
   role: string;
   leadTeamSize: string;
   website: string;
+  publicUrl: string | null;
   status: Status;
+  message: string;
   onEmailChangeAction: (value: string) => void;
   onCompanyChangeAction: (value: string) => void;
   onRoleChangeAction: (value: string) => void;
@@ -351,19 +353,28 @@ type LeadSectionProps = {
   onCaptureLeadAction: FormSubmitHandler;
 };
 
-export function LeadSection({ result, email, company, role, leadTeamSize, website, status, onEmailChangeAction, onCompanyChangeAction, onRoleChangeAction, onLeadTeamSizeChangeAction, onWebsiteChangeAction, onCaptureLeadAction }: LeadSectionProps) {
+const credexBookingUrl = process.env.NEXT_PUBLIC_CREDEX_BOOKING_URL ?? "mailto:hello@credex.com?subject=High-savings%20BillAudit%20consultation";
+
+export function LeadSection({ result, email, company, role, leadTeamSize, website, publicUrl, status, message, onEmailChangeAction, onCompanyChangeAction, onRoleChangeAction, onLeadTeamSizeChangeAction, onWebsiteChangeAction, onCaptureLeadAction }: LeadSectionProps) {
+  const isHighSavings = result?.savings_level === "high";
+
   return (
     <section id="lead" className="grid bg-[#111111] text-white lg:grid-cols-[1fr_0.8fr]">
       <div className="border-b border-white/10 p-6 lg:border-b-0 lg:border-r lg:p-12">
         <p className="font-mono text-xs uppercase tracking-[0.24em] text-white/45">AI follow-up</p>
         <h2 className="mt-4 max-w-3xl text-4xl font-medium leading-[1] tracking-[-0.04em] lg:text-6xl">Claim the clean version.</h2>
-        <p className="mt-5 max-w-xl text-lg leading-relaxed text-white/55">Drop an email. Gemini writes the internal Credex brief, sends your confirmation, and unlocks a PII-safe public snapshot.</p>
+        <p className="mt-5 max-w-xl text-lg leading-relaxed text-white/55">Drop an email to capture the report. Gemini writes the internal Credex brief, sends your confirmation, and unlocks a PII-safe public snapshot.</p>
         {result && (
           <div className="mt-8 grid gap-3 border border-white/10 bg-white/5 p-5 font-mono text-xs uppercase tracking-[0.12em] text-white/55">
             <div className="flex justify-between gap-4"><span>AI brief</span><strong className="text-[#17e86f]">Auto-generated</strong></div>
             <div className="flex justify-between gap-4"><span>Public URL</span><strong className="text-[#17e86f]">PII stripped</strong></div>
-            <div className="flex justify-between gap-4"><span>Credex reach-out</span><strong className="text-[#17e86f]">High-savings cases</strong></div>
+            <div className="flex justify-between gap-4"><span>Credex consultation</span><strong className="text-[#17e86f]">{isHighSavings ? "Available now" : "If savings spike"}</strong></div>
           </div>
+        )}
+        {isHighSavings && (
+          <a href={credexBookingUrl} className="button-light mt-6 inline-flex w-fit" target="_blank" rel="noreferrer">
+            Book Credex consultation →
+          </a>
         )}
       </div>
       <form onSubmit={onCaptureLeadAction} className="grid content-center gap-4 p-6 lg:p-12" aria-label="AI follow-up details">
@@ -397,6 +408,20 @@ export function LeadSection({ result, email, company, role, leadTeamSize, websit
           <input type="number" min="1" inputMode="numeric" value={leadTeamSize} onChange={(event) => onLeadTeamSizeChangeAction(event.target.value)} className="field-input bg-white text-black" placeholder="Example: 12" />
         </label>
         <button type="submit" className="button-light" disabled={!result || status === "loading"}>{status === "loading" ? "Writing brief..." : "Email me the audit →"}</button>
+        {message && result && (
+          <p className={`border p-4 font-mono text-xs uppercase tracking-[0.12em] ${status === "error" ? "border-red-300 bg-red-950/40 text-red-100" : "border-[#17e86f]/40 bg-[#17e86f]/10 text-[#b8ffd3]"}`}>
+            {message}
+          </p>
+        )}
+        {publicUrl && (
+          <div className="grid gap-3 border border-white/10 bg-white/5 p-4">
+            <p className="font-mono text-xs uppercase tracking-[0.16em] text-white/45">Shareable result URL</p>
+            <a href={publicUrl} className="break-all text-lg font-semibold text-[#17e86f] underline decoration-[#17e86f]/40 underline-offset-4">
+              {publicUrl}
+            </a>
+            <p className="text-sm leading-relaxed text-white/50">This public version shows tools and savings numbers only. Email, company, role, and team size stay private.</p>
+          </div>
+        )}
       </form>
     </section>
   );
