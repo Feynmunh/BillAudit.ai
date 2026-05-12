@@ -4,19 +4,19 @@
 
 ```bash
 npm install
-export DATABASE_URL="postgresql://..."
 npm run test
 npm run lint
+export DATABASE_URL="postgresql://..." # required for build-time Drizzle config
 npm run build
 ```
 
-- `npm run test` runs the automated Vitest suite under `server/`.
+- `npm run test` runs the automated Vitest suite under `server/`; the audit-engine tests do not require a database connection.
 - `npm run lint` runs ESLint across the Next/React frontend and Express backend TypeScript files.
 - `npm run build` runs `next build` and `tsc -p tsconfig.server.json`, so the React app, native route handlers, and local Express server type-check.
 
 ## GitHub Actions CI
 
-The workflow lives at `.github/workflows/ci.yml`.
+The workflow lives at `.github/workflows/ci.yml` and runs on Node.js 20.
 
 It runs on pushes and pull requests to `main`. The workflow provides a non-production `DATABASE_URL` fallback for build/type-check stability; production deployments still need the real Supabase connection string.
 
@@ -27,7 +27,7 @@ It runs on pushes and pull requests to `main`. The workflow provides a non-produ
 
 ## Automated tests
 
-All automated tests are in `server/auditEngine.test.ts`. The file contains 10 audit-engine tests, exceeding the minimum requirement of 5 audit-engine-specific tests.
+All automated tests are in `server/auditEngine.test.ts`. The file currently contains 10 audit-engine tests, exceeding the minimum requirement of 5 audit-engine-specific tests.
 
 | Filename | Test name | What it covers | How to run |
 |---|---|---|---|

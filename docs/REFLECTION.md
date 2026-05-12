@@ -10,7 +10,7 @@ I reversed the original split-stack backend decision. The project began with a P
 
 ## 3. What is the week-2 roadmap?
 
-Week 2 should focus on production readiness and better financial accuracy. First, verify every price in `server/pricingData.ts` against official vendor pages and update `PRICING_DATA.md` with final dates. Second, add token-volume inputs for usage-based API spend so recommendations can become more precise. Third, add Drizzle migrations, indexes, and a deployment checklist. Fourth, capture screenshots and a short demo video for the README. Fifth, add browser-level Playwright tests for the audit flow, lead capture, public audit page, logo-only tab layout, and no-horizontal-overflow behavior. Finally, add durable rate limiting and structured logging for `/api/audit/calculate` and `/api/lead`.
+Week 2 should focus on production readiness and better financial accuracy. First, verify every price in `server/pricingData.ts` against official vendor pages and update `PRICING_DATA.md` with final dates. Second, add token-volume inputs for usage-based API spend so recommendations can become more precise. Third, generate and review Drizzle migrations, add explicit indexes where needed, and write a deployment checklist. Fourth, capture screenshots and a short demo video for the README. Fifth, add browser-level Playwright tests for the audit flow, lead capture, public audit page, logo-only tab layout, and no-horizontal-overflow behavior. Finally, add durable rate limiting and structured logging for `/api/audit/calculate` and `/api/lead`.
 
 ## 4. How did AI tools help, and where did they make mistakes?
 
@@ -21,5 +21,5 @@ AI tools helped with code translation, migration planning, route-shape checks, a
 - **Product clarity: 8/10.** The audit loop is clear: enter spend, get savings, capture lead, share public result.
 - **Technical correctness: 8/10.** The audit engine has tests and runtime validation, but pricing needs final external verification.
 - **UI quality: 8/10.** The custom UI is cohesive, keeps the black/green rectangular buttons, and uses compact logo-only tool tabs, but final screenshots are still needed.
-- **Documentation: 8/10.** The docs now reflect Supabase/Drizzle, Gemini, Resend, Vercel route handlers, and local Express development, but README media links and source verification should be completed before submission.
+- **Documentation: 8/10.** The docs now reflect Supabase/Drizzle, Gemini/Google API key fallback, Resend, Vercel route handlers, local Express compatibility routes, and current pricing seed data, but README media links and source verification should be completed before submission.
 - **Production readiness: 6/10.** The app builds and runs locally, but deployment, rate limiting, logs, and Drizzle migrations still need hardening.

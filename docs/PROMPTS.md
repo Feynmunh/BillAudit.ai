@@ -12,6 +12,7 @@ Runtime settings:
 
 - SDK: `@google/genai`
 - Method: `client.models.generateContent(...)`
+- API key env: `GEMINI_API_KEY` preferred, `GOOGLE_API_KEY` fallback
 - Model: `GEMINI_MODEL` or `gemini-2.5-flash`
 - Input recommendations: top 3 by monthly savings
 
@@ -33,7 +34,7 @@ AI summary fallback used because the LLM request failed: <ErrorName>.
 
 ## Internal lead brief prompt
 
-After lead capture, the backend asks Gemini for a 45-word internal Credex brief using only the optional company, role, team size, savings totals, and savings level. The output is stored in `leads.lead_summary`, is never shown on the public audit URL, and is separate from the Resend confirmation email sent to the user-entered address.
+After lead capture, the backend asks Gemini for a 45-word internal Credex brief using only the optional company, role, team size, savings totals, and savings level. If Gemini is not configured or fails, a deterministic internal lead brief is stored instead. The output is stored in `leads.lead_summary`, is never shown on the public audit URL, and is separate from the Resend confirmation email sent to the user-entered address.
 
 ## Failed iterations
 

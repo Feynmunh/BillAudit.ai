@@ -74,12 +74,15 @@ flowchart LR
 
 ## API surface
 
-- `GET /api/health` - service health.
-- `GET /api/tools` - supported tools and tier names/prices.
-- `POST /api/audit/calculate` - validated audit request, audit result response.
-- `GET /api/audit/:auditId` - saved full audit result.
-- `GET /api/share/:auditId` - PII-safe public audit view.
-- `POST /api/lead` - lead capture.
+- Shared Vercel and local routes:
+  - `POST /api/audit/calculate` - validated audit request, persisted audit result response.
+  - `GET /api/share/:auditId` - PII-safe public audit view.
+  - `POST /api/lead` - honeypot-checked lead capture, internal lead brief, persistence, and Resend confirmation email.
+- Local Express compatibility routes:
+  - `GET /api/health` - service health.
+  - `GET /api/tools` - supported tools and tier names/prices.
+  - `POST /api/audit` - legacy alias for audit calculation.
+  - `GET /api/audit/:auditId` - saved full audit result.
 
 ## Database
 
@@ -94,7 +97,7 @@ Lead capture uses a hidden honeypot field plus an in-memory IP rate limit of 5 l
 10k audits/day is roughly 7 audits/minute on average, with higher bursts during demos or campaigns. The current app can handle that in a small deployment if Supabase is configured, but these changes would harden it:
 
 1. **Persist every audit through Drizzle** and keep `DATABASE_URL` server-only.
-2. **Add indexes** on `audits.audit_id`, `audits.created_at`, and `leads.audit_id`.
+2. **Add explicit indexes** on high-volume lookup fields beyond the primary key, especially `audits.created_at` and `leads.audit_id`.
 3. **Move Gemini summaries to a queue** if p95 latency or rate limits become a problem; return fallback immediately and update `ai_summary` asynchronously.
 4. **Cache `/api/tools`** because pricing seed data is static during a deployment.
 5. **Add rate limiting** for `/api/audit/calculate` and `/api/lead` by IP/session to protect spend and prevent spam.

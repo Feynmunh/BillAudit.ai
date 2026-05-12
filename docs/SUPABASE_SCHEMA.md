@@ -12,13 +12,13 @@ Do not expose `DATABASE_URL` to browser code.
 
 ## Tables
 
-The canonical Drizzle schema lives in `server/db/schema.ts`. You can apply it with:
+The canonical Drizzle schema lives in `server/db/schema.ts`. You can apply the current schema directly with:
 
 ```bash
 npm run db:push
 ```
 
-Equivalent SQL:
+Equivalent base SQL:
 
 ```sql
 create table if not exists public.audits (
@@ -29,9 +29,6 @@ create table if not exists public.audits (
   total_annual_savings numeric not null default 0,
   created_at timestamptz not null default now()
 );
-
-create index if not exists audits_created_at_idx on public.audits (created_at desc);
-create index if not exists audits_savings_level_idx on public.audits (savings_level);
 
 create table if not exists public.leads (
   id uuid primary key default gen_random_uuid(),
@@ -45,6 +42,13 @@ create table if not exists public.leads (
   created_at timestamptz not null default now()
 );
 
+```
+
+Recommended production indexes after the base schema is provisioned:
+
+```sql
+create index if not exists audits_created_at_idx on public.audits (created_at desc);
+create index if not exists audits_savings_level_idx on public.audits (savings_level);
 create index if not exists leads_audit_id_idx on public.leads (audit_id);
 create index if not exists leads_created_at_idx on public.leads (created_at desc);
 ```

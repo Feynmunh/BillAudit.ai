@@ -8,9 +8,9 @@ Pricing seed data is stored in `server/pricingData.ts` as typed `ToolPricing` an
 |---|---:|---|---|---|
 | Cursor | Pro $20/mo, $192/yr; Business $40/mo, $384/yr; Enterprise seed $80/mo, $768/yr | https://cursor.com/pricing | 2026-05-08 | Enterprise is a seed estimate and must be rechecked before public launch. |
 | GitHub Copilot | Individual $10/mo, $100/yr; Business $19/mo, $190/yr; Enterprise $39/mo, $390/yr | https://github.com/features/copilot#pricing | 2026-05-08 | Per-seat pricing. |
-| Claude | Pro $20/mo, $200/yr; Team $30/mo, $300/yr | https://www.anthropic.com/pricing | 2026-05-08 | Consumer/team plan seed data. |
+| Claude | Free $0; Pro $20/mo, $200/yr; Max $100/mo, $1,200/yr; Team $30/mo, $300/yr; Enterprise seed $60/mo, $600/yr; API direct $0 platform baseline | https://www.anthropic.com/pricing | 2026-05-08 | Enterprise and API-direct baselines are seed assumptions and must be rechecked before public launch. |
 | ChatGPT | Plus $20/mo, $199/yr; Team $30/mo, $299/yr; Enterprise seed $60/mo, $599/yr | https://openai.com/chatgpt/pricing/ | 2026-05-08 | Enterprise is a seed estimate and must be rechecked before public launch. |
-| Gemini | Advanced $19.99/mo, $199.99/yr; Business $30/mo, $300/yr | https://workspace.google.com/solutions/ai/ | 2026-05-08 | Workspace business plan pricing may vary by region and billing term. |
+| Gemini | Pro $19.99/mo, $199.99/yr; Ultra $249.99/mo, $2,999.88/yr; API $0 platform baseline | https://gemini.google.com | 2026-05-08 | API spend remains conservative without token-volume inputs. |
 | OpenAI API | GPT-4o $5/1M input tokens, $15/1M output tokens; GPT-4o mini $0.15/$0.60 per 1M tokens | https://openai.com/api/pricing/ | 2026-05-08 | The audit engine does not infer savings without token-volume inputs. |
 | Anthropic API | API direct $0 platform baseline | https://www.anthropic.com/pricing | 2026-05-08 | Included for spend visibility; usage-based savings stay conservative without token-volume inputs. |
 | Windsurf | Pro $15/mo, $144/yr; Teams $30/mo, $300/yr; Enterprise seed $60/mo, $600/yr | https://windsurf.com/pricing | 2026-05-08 | Included for the current UI/tool set; final vendor recheck required before public launch. |
@@ -21,6 +21,7 @@ Pricing seed data is stored in `server/pricingData.ts` as typed `ToolPricing` an
 ## Maintenance rules
 
 - Every number in `server/pricingData.ts` must be traceable to this file.
+- The canonical tool IDs are `cursor`, `windsurf`, `github_copilot`, `claude`, `chatgpt`, `anthropic_api`, `gemini`, `openai_api`, `perplexity`, `midjourney`, and `runway`.
 - Final submission should include a fresh manual recheck of each official pricing page.
 - API usage-based tools must not produce savings without token-volume or usage inputs.
 - Annual spend is normalized to monthly spend before scoring.

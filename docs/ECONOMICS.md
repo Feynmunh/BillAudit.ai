@@ -24,4 +24,4 @@ Credex can use BillAudit as a wedge into AI infrastructure optimization, vendor 
 
 Implementation note
 -------------------
-The current MVP reduces funnel friction with same-origin API calls, no external auth step, compact logo-only tool selection, and Resend transactional email after lead capture. Supabase Postgres keeps audit/share URLs durable enough for follow-up sales workflows.
+The current MVP reduces funnel friction with same-origin API calls, no external auth step, compact logo-only tool selection, and Resend transactional email after lead capture. Supabase Postgres keeps `/audit/:uuid` public URLs durable enough for follow-up sales workflows, and `NEXT_PUBLIC_CREDEX_BOOKING_URL` can route high-savings users directly to a consultation CTA.

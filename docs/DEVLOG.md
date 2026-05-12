@@ -107,3 +107,15 @@
 **Blockers:** Final screenshots/video and production Supabase/Resend smoke tests still need deployment credentials and a live domain.
 
 **Plan for tomorrow:** Capture final browser QA, verify email delivery from the verified Resend domain, and recheck PR review comments before merge.
+
+## Day 10
+
+**Hours worked:** 1
+
+**What I did:** Refreshed the README and supporting Markdown docs against the current codebase: Node 20 CI, Next 16 route-handler deployment, local Express compatibility routes, Gemini env fallbacks, Resend email behavior, current pricing seed data, and Drizzle/Supabase schema notes.
+
+**What I learned:** Documentation should distinguish Vercel route handlers from local-only Express compatibility endpoints so the deployment story does not imply routes that are unavailable serverlessly.
+
+**Blockers:** Screenshots/video links, live Supabase smoke testing, and final vendor pricing rechecks still depend on production deployment access.
+
+**Plan for tomorrow:** Add production URLs and media captures after deployment, then re-run the full browser audit flow with a real `DATABASE_URL`, verified `EMAIL_FROM`, and Resend API key.

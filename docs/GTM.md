@@ -3,7 +3,7 @@ Go-to-market
 
 Positioning
 -----------
-BillAudit is an instant AI spend audit for teams buying Cursor, Claude, ChatGPT, Gemini, Copilot, Windsurf, and API credits without a clear renewal strategy.
+BillAudit is an instant AI spend audit for teams buying Cursor, Windsurf, Claude, ChatGPT, Gemini, Copilot, Perplexity, Midjourney, Runway, and API credits without a clear renewal strategy.
 
 Primary audience
 ----------------
@@ -21,7 +21,7 @@ Acquisition loops
 
 Lead magnet
 -----------
-Show value before asking for email. Gate the benchmark export and public share link after the savings number is visible.
+Show value before asking for email. Gate the public share link, confirmation email, and high-savings Credex consultation path after the savings number is visible.
 
 Product proof points
 --------------------
@@ -29,5 +29,5 @@ Product proof points
 - Compact logo-only AI-tool tabs for fast spend entry.
 - Gemini-generated executive summary with deterministic fallback.
 - Resend confirmation email sent to the address entered by the user.
-- PII-safe public audit URL backed by Supabase Postgres.
+- PII-safe public `/audit/:uuid` URL backed by Supabase Postgres.
 - High-savings users get an explicit Credex consultation CTA after the audit/report capture step.
