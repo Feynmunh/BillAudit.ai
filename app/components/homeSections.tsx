@@ -193,7 +193,20 @@ export function SpendInputSection({ form, toolsConfig, teamSize, useCase, status
     <section id="audit" className="audit-section">
       <div className="mx-auto grid max-w-[72rem] gap-8 px-0 sm:px-4">
         <AuditSidebar selectedCount={selectedCount} declaredSpend={declaredSpend} />
-        <form onSubmit={onRunAuditAction} className="audit-console">
+        <div className="grid gap-4">
+          <div className="audit-setup-grid audit-setup-grid-standalone">
+            <label className="field-label">
+              Team size
+              <input inputMode="numeric" value={teamSize} onChange={(event) => onTeamSizeChangeAction(event.target.value)} className="field-input" placeholder="Example: 12" />
+            </label>
+            <label className="field-label">
+              Primary use case
+              <select value={useCase} onChange={(event) => onUseCaseChangeAction(event.target.value as UseCase)} className="field-input">
+                {useCaseOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+              </select>
+            </label>
+          </div>
+          <form onSubmit={onRunAuditAction} className="audit-console">
           <div className="audit-tabs" aria-label="AI tools">
             {activeTools.map((tool) => {
               const toolSpend = form.find((item) => item.toolId === tool.id);
@@ -251,18 +264,6 @@ export function SpendInputSection({ form, toolsConfig, teamSize, useCase, status
             )}
           </div>
           <div className="audit-detail-panel">
-            <div className="audit-setup-grid">
-              <label className="field-label">
-                Team size
-                <input inputMode="numeric" value={teamSize} onChange={(event) => onTeamSizeChangeAction(event.target.value)} className="field-input" placeholder="Example: 12" />
-              </label>
-              <label className="field-label">
-                Primary use case
-                <select value={useCase} onChange={(event) => onUseCaseChangeAction(event.target.value as UseCase)} className="field-input">
-                  {useCaseOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-                </select>
-              </label>
-            </div>
             {selectedToolSpend && selectedConfig && (
               <ToolRow toolSpend={selectedToolSpend} config={selectedConfig} onChange={(next) => onUpdateToolAction(selectedToolSpend.toolId, next)} />
             )}
@@ -274,7 +275,8 @@ export function SpendInputSection({ form, toolsConfig, teamSize, useCase, status
             </button>
           </div>
           {message && <p className="mt-4 bg-red-50 p-4 font-mono text-xs uppercase tracking-[0.12em] text-red-700">{message}</p>}
-        </form>
+          </form>
+        </div>
       </div>
     </section>
   );

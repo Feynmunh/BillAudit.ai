@@ -21,6 +21,12 @@ function AuditPlaceholder() {
               <div className="audit-metric-row"><span>Autosave</span><strong>On</strong></div>
             </div>
           </div>
+          <div className="grid gap-4">
+            <div className="audit-setup-grid audit-setup-grid-standalone" aria-hidden="true">
+              {Array.from({ length: 2 }, (_, index) => (
+                <div key={index} className="h-20 border border-black/10 bg-[#fbfaf7]" />
+              ))}
+            </div>
           <div className="audit-console" aria-busy="true">
             <div className="audit-tabs" aria-hidden="true">
               {Array.from({ length: 4 }, (_, index) => (
@@ -35,11 +41,6 @@ function AuditPlaceholder() {
               </div>
             </div>
             <div className="audit-detail-panel">
-              <div className="audit-setup-grid">
-                {Array.from({ length: 2 }, (_, index) => (
-                  <div key={index} className="h-20 border border-black/10 bg-[#fbfaf7]" />
-                ))}
-              </div>
               <div className="tool-row">
                 <div className="flex min-w-0 items-center gap-5">
                   <div className="h-24 w-24 border-2 border-black/10 bg-white" />
@@ -55,6 +56,7 @@ function AuditPlaceholder() {
                 </div>
               </div>
             </div>
+          </div>
           </div>
         </div>
       </section>

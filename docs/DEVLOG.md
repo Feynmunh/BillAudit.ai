@@ -2,120 +2,50 @@
 
 ## Day 1
 
-**Hours worked:** 5
+**What I did:** Started the project with a Next.js frontend scaffold and the first backend placeholder. Set up the initial app structure, default frontend files, package setup, TypeScript config, and early backend files so the project had a runnable base.
 
-**What I did:** Created the first audit data model, pricing seed data, and savings logic. Added tests for obvious overspend, aligned spend, annual billing normalization, usage-based API spend, high savings thresholds, unknown tools, and duplicate tools.
+**What I learned:** The first priority was getting a working foundation in place before polishing the audit product. A clean scaffold made it easier to move fast in later commits.
 
-**What I learned:** The most important product rule is avoiding false savings; usage-based API tools need token-volume inputs before recommending cheaper spend.
+**Blockers:** The app was still mostly starter structure and did not yet have the final full-stack architecture, spend-audit UI, persistence, or share flow.
 
-**Blockers:** Pricing source verification is still incomplete for public launch quality.
-
-**Plan for tomorrow:** Build the API layer and connect the audit engine to a UI.
+**Plan for tomorrow:** Restructure the repo into the final shape and begin adding backend audit logic plus documentation.
 
 ## Day 2
 
-**Hours worked:** 6
+**What I did:** Moved the frontend into the repo root, added the TypeScript server modules, created audit engine tests, pricing data, storage, API, summary service, and core documentation. Moved markdown files into `docs/`, added CI, and installed form-related dependencies.
 
-**What I did:** Built the first backend API, storage flow, public audit view, and lead capture path. Added Supabase persistence for audit and lead records.
+**What I learned:** Keeping frontend, backend, tests, pricing, and docs in one project made the MVP easier to reason about. Documentation needed to move with the architecture instead of staying as loose root files.
 
-**What I learned:** A share page needs a separate public view model so email, company, and role data never leak into public output.
+**Blockers:** Generated Playwright/Sisyphus artifacts were accidentally tracked and needed cleanup later. The app still needed public audit sharing, Gemini, durable persistence, and stronger UI.
 
-**Blockers:** Supabase tables still need deployment provisioning.
-
-**Plan for tomorrow:** Create the frontend experience and make the audit usable without a login gate.
+**Plan for tomorrow:** Add the public audit page, Open Graph support, Gemini summaries, and database-backed persistence.
 
 ## Day 3
 
-**Hours worked:** 7
+**What I did:** Added the public `/audit/:uuid` experience, Open Graph image route, Gemini summary integration, Drizzle/Postgres persistence, Resend email service, use-case and team-size fields, plan options, pricing updates, reusable audit UI components, and Playwright snapshots.
 
-**What I did:** Replaced the default Next page with a custom React UI for spend input, instant audit results, lead capture, and public sharing. Avoided shadcn/ui and built the interface by hand.
+**What I learned:** The product became real once audits could be saved, shared, summarized, and followed up by email. The UI also needed separate reusable components so the spend form, results, and lead capture could evolve without one huge page file.
 
-**What I learned:** Brutalist buttons can work without making the whole UI heavy; the surrounding layout needs restraint.
+**Blockers:** The UI still needed branding polish, local/Vercel API compatibility, and artifact cleanup. Some generated snapshots were still in the repository.
 
-**Blockers:** The first hero visual was too visually complex.
-
-**Plan for tomorrow:** Polish the UI and remove inconsistent rounded elements.
+**Plan for tomorrow:** Polish branding and layout, stabilize API routes, and fix CI/deployment issues.
 
 ## Day 4
 
-**Hours worked:** 4
+**What I did:** Updated branding, backgrounds, metadata, assets, and the audit experience. Added Vercel-compatible API routes, updated server logic, fixed CI configuration, improved the spend-input UI, updated the email service, added local tool logos, and ignored/removed generated test artifacts.
 
-**What I did:** Simplified the hero graphic, restored square brutalist buttons, made the top bar green, and removed curved corners from Spend Input, Audit Dashboard, and Lead Capture areas.
+**What I learned:** Same-origin API routes are safer for this deployment than relying on a client-side base URL. Local SVG logos also prevent broken remote logo loading and make the spend form more reliable.
 
-**What I learned:** Consistency matters more than decorative detail when a page has a strong visual language.
+**Blockers:** The spend form still needed more UX iteration around tool selection, public report visibility, and lead follow-up messaging.
 
-**Blockers:** TypeScript LSP diagnostics were unavailable in the local agent environment because `typescript-language-server` was not installed.
-
-**Plan for tomorrow:** Strengthen engineering documentation and architecture notes.
+**Plan for tomorrow:** Improve the public report and lead flow, refine tool add/remove interactions, and update documentation.
 
 ## Day 5
 
-**Hours worked:** 3
+**What I did:** Exposed the public report URL, updated lead UI messaging, added the Credex CTA, added and refined tool add/remove UI, refactored the audit tool menu and tabs, improved lead messaging, switched public audits to use the server `AuditStore`, and updated documentation.
 
-**What I did:** Added architecture documentation and mapped the system flow across frontend, backend logic, storage, and optional Gemini summaries.
+**What I learned:** The final flow needed to connect product value to follow-up clearly: run audit, see savings, capture email, share report, and give Credex a clear CTA. Public reports also need to read from the same server-side store path as saved audits.
 
-**What I learned:** The documentation needs to track pivots immediately; stale FastAPI references became misleading after the TypeScript migration.
+**Blockers:** Final production QA still depends on real Supabase and Resend environment variables. Screenshots/video and a final pricing recheck remain before public launch.
 
-**Blockers:** `TESTS.md` and `PROMPTS.md` were missing and had to be created.
-
-**Plan for tomorrow:** Migrate the backend to the final unified TypeScript architecture.
-
-## Day 6
-
-**Hours worked:** 8
-
-**What I did:** Migrated the Python/FastAPI backend logic into the same Next project as an Express backend server. Replaced Pydantic with Zod schemas, moved audit math into pure TypeScript, kept Supabase and Gemini optional, moved the app from `frontend/` to the repo root, and removed the old `backend/` and `frontend/` folders.
-
-**What I learned:** One-port full-stack architecture needs clear route ownership. Express initially shadowed `/` and `/share/:auditId`; the fix was to let Next own pages and move backend routes to `/api/*`.
-
-**Blockers:** A generated `dist-server/` folder was unwanted and removed by switching the server TypeScript check to `noEmit`.
-
-**Plan for tomorrow:** Re-run end-to-end QA, capture screenshots/video, and finish pricing verification.
-
-## Day 7
-
-**Hours worked:** 2
-
-**What I did:** Updated mandatory documentation for the final architecture, tests, prompts, pricing assumptions, and reflection. Verified the app with lint, build, tests, and same-port API checks.
-
-## Day 8
-
-**Hours worked:** 2
-
-**What I did:** Enforced durable database persistence, kept Gemini as the only LLM provider, added `/api/audit/calculate`, added the public `/audit/:uuid` route, and documented the `audits` and `leads` schema.
-
-**What I learned:** Provider requirements should be encoded in both runtime configuration and documentation; optional fallback language can contradict production architecture.
-
-**Blockers:** Full Supabase Postgres integration QA requires a real server-only `DATABASE_URL`.
-
-**Plan for tomorrow:** Run against the production Supabase project, capture final screenshots, and add a disposable Supabase integration test path.
-
-**What I learned:** The strongest architecture for this MVP is not “frontend plus backend service”; it is one Next application with React pages and an Express API namespace.
-
-**Blockers:** Screenshots/video links are still pending final capture. Pricing still needs a final live vendor recheck before public submission.
-
-**Plan for tomorrow:** Add deployment links, screenshots, and final source verification dates after production deployment.
-
-## Day 9
-
-**Hours worked:** 5
-
-**What I did:** Made the API Vercel-compatible by adding native Next route handlers for audit calculation, lead capture, and public share data while keeping the local Express server path intact. Updated the spend-audit UI to use logo-only tabs, local SVG logo assets, compact wrapping, and the existing black/green rectangular button style. Fixed the CI `DATABASE_URL` build failure with a safe workflow fallback and removed generated Playwright/Sisyphus artifacts from the PR.
-
-**What I learned:** Same-origin API paths are safer than environment-built client URLs for a single Next app because they work locally and on Vercel. Local logo assets also remove an avoidable production dependency on remote image hosts.
-
-**Blockers:** Final screenshots/video and production Supabase/Resend smoke tests still need deployment credentials and a live domain.
-
-**Plan for tomorrow:** Capture final browser QA, verify email delivery from the verified Resend domain, and recheck PR review comments before merge.
-
-## Day 10
-
-**Hours worked:** 1
-
-**What I did:** Refreshed the README and supporting Markdown docs against the current codebase: Node 20 CI, Next 16 route-handler deployment, local Express compatibility routes, Gemini env fallbacks, Resend email behavior, current pricing seed data, and Drizzle/Supabase schema notes.
-
-**What I learned:** Documentation should distinguish Vercel route handlers from local-only Express compatibility endpoints so the deployment story does not imply routes that are unavailable serverlessly.
-
-**Blockers:** Screenshots/video links, live Supabase smoke testing, and final vendor pricing rechecks still depend on production deployment access.
-
-**Plan for tomorrow:** Add production URLs and media captures after deployment, then re-run the full browser audit flow with a real `DATABASE_URL`, verified `EMAIL_FROM`, and Resend API key.
+**Plan for tomorrow:** Run final browser QA, verify production email delivery, confirm public report links, and complete launch assets.
